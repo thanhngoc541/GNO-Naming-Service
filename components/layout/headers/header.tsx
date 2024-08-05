@@ -77,7 +77,7 @@ const HeaderOne = () => {
                             <div className="col-12">
                                 <div className="mobile-menu mean-container d-lg-none">
                                     <div className="mean-bar">
-                                        <MobileMenus />
+                                        {/* <MobileMenus /> */}
                                     </div>
                                 </div>
                             </div>
