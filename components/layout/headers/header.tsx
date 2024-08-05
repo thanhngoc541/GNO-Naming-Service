@@ -9,16 +9,11 @@ import Image from 'next/image';
 import useAdenaWallet from '../../hooks/use-adena-wallet';
 
 const HeaderOne = () => {
-    const { isConnected, account, connect, disconnect } = useAdenaWallet();
-    console.log(account)
+    const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
     const [sidebarOppen, setSidebarOppen] = useState(false)
     const [searchOppen, setSearchOppen] = useState(false)
-    function shortenString(str: string, maxLength: number): string {
-        if (str.length <= maxLength) {
-            return str;
-        }
-        return str.slice(0, maxLength) + '...';
-    }
+
+
     return (
         <>
             <header>
@@ -67,7 +62,6 @@ const HeaderOne = () => {
                                             </div>
                                         ) : (
                                             <div>
-
                                                 <div className="btn"> {account?.address.slice(0, 5) + "..." + account?.address.slice(account?.address.length - 3, account?.address.length)}</div>
                                             </div>
                                         )}

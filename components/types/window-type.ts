@@ -5,6 +5,7 @@ declare global {
         adena?: {
             AddEstablish: (arg: string) => Promise<void>;
             GetAccount: () => Promise<any>;
+            DoContract: (params: any) => Promise<any>;
         };
     }
 }
