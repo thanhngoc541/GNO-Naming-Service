@@ -1,5 +1,6 @@
-// hooks/useAdenaWallet.ts
-import { useCallback, useEffect, useState } from 'react';
+"use client";
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+
 interface Response {
     status: string;
     code: number;
@@ -7,6 +8,7 @@ interface Response {
     message: string;
     data: Account;
 }
+
 interface Account {
     accountNumber: string;
     address: string;
@@ -15,7 +17,28 @@ interface Account {
     sequence: string;
     status: string;
 }
-const useAdenaWallet = () => {
+
+interface AdenaWalletContextProps {
+    isConnected: boolean;
+    account: Account | null;
+    connect: () => void;
+    disconnect: () => void;
+    sendMsgContract: (fromAddress: string, toAddress: string, amount: string, memo: string) => Promise<any>;
+    sendCallContract: (caller: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => Promise<any>;
+    sendRunContract: (caller: string, packageName: string, packagePath: string, fileName: string, fileBody: string, gasFee: number, gasWanted: number) => Promise<any>;
+}
+
+const AdenaWalletContext = createContext<AdenaWalletContextProps | undefined>(undefined);
+
+export const useAdenaWallet = () => {
+    const context = useContext(AdenaWalletContext);
+    if (!context) {
+        throw new Error('useAdenaWallet must be used within an AdenaWalletProvider');
+    }
+    return context;
+};
+
+export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [account, setAccount] = useState<Account | null>(null);
 
@@ -140,7 +163,9 @@ const useAdenaWallet = () => {
         }
     }, []);
 
-    return { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract };
+    return (
+        <AdenaWalletContext.Provider value={{ isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract }}>
+            {children}
+        </AdenaWalletContext.Provider>
+    );
 };
-
-export default useAdenaWallet;

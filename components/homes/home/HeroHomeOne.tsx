@@ -1,7 +1,8 @@
 "use client"
 import Image from "next/image";
 import server_img from "../../../public/assets/img/slider/server.png";
-import useAdenaWallet from "../../hooks/use-adena-wallet";
+import { useAdenaWallet } from '../../hooks/use-adena-wallet';
+
 interface hero_content_type {
     bg_img: string;
     sub_title: string;
@@ -16,6 +17,7 @@ const { bg_img, sub_title, title } = hero_content
 
 const HeroHomeOne = () => {
     const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
+    console.log(isConnected, account)
     const handleSendCallContract = async () => {
         if (account) {
             try {
@@ -85,9 +87,9 @@ const HeroHomeOne = () => {
                                         <div className="slider-btn wow fadeInUp animated" data-wow-delay="0.9s">
                                             {/* <a href="#" className="btn">Get Started</a>
                                             <a href="#" className="btn btn-border">Learn More</a> */}
-                                            <a  href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
-                                            <a  href="#" className="btn" onClick={handleSendCallContract}>Send Call</a>
-                                            <a  href="#" className="btn" onClick={handleSendRunContract}>Send Run</a>
+                                            <a href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
+                                            <a href="#" className="btn" onClick={handleSendCallContract}>Send Call</a>
+                                            <a href="#" className="btn" onClick={handleSendRunContract}>Send Run</a>
                                         </div>
                                     </div>
                                 </div>

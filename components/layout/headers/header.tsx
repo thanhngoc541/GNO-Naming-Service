@@ -6,12 +6,13 @@ import SlideBar from './slide-bar';
 import MobileMenus from './mobile-menus';
 import Logo from "../../../public/assets/img/logo/logo.svg";
 import Image from 'next/image';
-import useAdenaWallet from '../../hooks/use-adena-wallet';
+import { useAdenaWallet } from '../../hooks/use-adena-wallet';
 
 const HeaderOne = () => {
     const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
     const [sidebarOppen, setSidebarOppen] = useState(false)
     const [searchOppen, setSearchOppen] = useState(false)
+    console.log(isConnected, account);
 
 
     return (
