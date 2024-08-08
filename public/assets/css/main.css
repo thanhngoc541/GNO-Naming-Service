@@ -19,13 +19,13 @@ img{
 	transition: .3s;
 }
 .f-left {
-	float: left 
+	float: left
 }
 .f-right {
-	float: right 
+	float: right
 }
 .fix {
-	overflow: hidden 
+	overflow: hidden
 }
 a, .button {
 	-webkit-transition: all 0.3s ease-out 0s;
@@ -94,7 +94,7 @@ ul {
 	padding: 0px;
 }
 li {
-	list-style: none 
+	list-style: none
 }
 p {
 	font-size: 14px;
@@ -141,7 +141,7 @@ label {
 	opacity: 1;
 }
 .theme-overlay {
-	position: relative 
+	position: relative
 }
 .theme-overlay::before {
 	background: #1696e7 none repeat scroll 0 0;
@@ -154,7 +154,7 @@ label {
 	width: 100%;
 }
 .separator {
-	border-top: 1px solid #f2f2f2 
+	border-top: 1px solid #f2f2f2
 }
 /* button style */
 .btn {
@@ -183,7 +183,7 @@ label {
 .btn:hover{
 	border-color: #926bfa;
 	background: none;
-	color: #fff 
+	color: #fff
 }
 
 .btn-grad{
@@ -310,7 +310,7 @@ label {
 }
 .owl-carousel .owl-nav div:hover {
 	background: #2B96CC;
-	color: #fff 
+	color: #fff
 }
 /* scrollUp */
 #scrollUp {
@@ -368,7 +368,7 @@ label {
 	font-weight: 500;
 }
 .main-menu.main-menu-one ul li:hover > a{
-	color: #002bb7 
+	color: #002bb7
 }
 .main-menu.contract-menu ul li a {
 	color: #fff;
@@ -649,7 +649,7 @@ input.main-search-input:-ms-input-placeholder {
 	min-height: 960px;
 	background-repeat: no-repeat;
 	background-position: top center;
-	background-size: cover 
+	background-size: cover
 }
 .hero-slider {
 	/* min-height: 950px; */
@@ -828,7 +828,7 @@ select.focus, select:active.focus, select.active.focus {
 	border-color: #002bb7;
 }
 .domain-list ul li a.active span{
-	color: #fff 
+	color: #fff
 }
 .domain-list ul li a:hover {
 	color: #fff;
@@ -836,7 +836,7 @@ select.focus, select:active.focus, select.active.focus {
 	border-color: #002bb7;
 }
 .domain-list ul li a:hover span{
-	color: #fff 
+	color: #fff
 }
 .domain-list ul li a span {
 	color: #002bb7;
@@ -858,7 +858,7 @@ select.focus, select:active.focus, select.active.focus {
 	margin-bottom: 10px;
 }
 .section-title p {
-	margin: 0 
+	margin: 0
 }
 /* serices */
 .services-box{
@@ -2173,7 +2173,7 @@ ul.cat li a:hover {
 }
 /* footer area */
 .footer-sing-up h5{
-	color:#707eac 
+	color:#707eac
 }
 .footer-left-info h5{
 	color: #d1d2d6;
@@ -2527,6 +2527,12 @@ a.btn.btn-subscriptin i {
 	background-size: cover;
 	padding-top: 300px;
 	padding-bottom: 180px;
+}
+.breadcrumb-area.domain-header {
+    padding-top: 300px;
+    height: 400px;
+    margin-bottom: 300px;
+    padding-bottom: 0 ;
 }
 .breadcrumb-text {
 	position: relative;
@@ -3398,5 +3404,5 @@ a{
 }
 .error-btn:hover{
 	color: #000c35;
-	
+
 }

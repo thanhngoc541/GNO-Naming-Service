@@ -23,11 +23,11 @@ const HeroHomeOne = () => {
             try {
                 const result = await sendCallContract(
                     account.address,
-                    'gno.land/r/demo/foo20', // Gnoland package path
-                    'Transfer', // Function name
-                    ['g122n67es9vzs0rmharsggfr4sdkd45aysnuzf7m', '1'], // Arguments
+                    'gno.land/r/varmeta/registrar', // Gnoland package path
+                    'Register', // Function name
+                    ['ngoc.gno'], // Arguments
                     1, // gasFee
-                    10000000 // gasWanted
+                    2000000 // gasWanted
                 );
                 console.log('Transaction successful:', result);
             } catch (error) {
@@ -40,8 +40,8 @@ const HeroHomeOne = () => {
             try {
                 const result = await sendMsgContract(
                     account.address,
-                    'g122n67es9vzs0rmharsggfr4sdkd45aysnuzf7m',
-                    '10000000ugnot',
+                    'g1n6af0uz6pznjfa2l8ttdzjppkefrhszz4ny862',
+                    '1000000ugnot',
                     'Transaction Memo'
                 );
                 console.log('Transaction successful:', result);
@@ -61,7 +61,7 @@ const HeroHomeOne = () => {
                     'script.gno', // File name
                     'package main\n\nfunc Main() {\n\tprintln("HELLO WORLD")\n}', // File body
                     1, // gasFee
-                    2000000 // gasWanted
+                    1000000 // gasWanted
                 );
                 console.log('Run contract successful:', result);
             } catch (error) {
@@ -85,11 +85,11 @@ const HeroHomeOne = () => {
                                             {title}
                                         </h2>
                                         <div className="slider-btn wow fadeInUp animated" data-wow-delay="0.9s">
-                                            {/* <a href="#" className="btn">Get Started</a>
-                                            <a href="#" className="btn btn-border">Learn More</a> */}
-                                            <a href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
+                                            <a href="#" className="btn">Get Started</a>
+                                            <a href="#" className="btn btn-border">Learn More</a>
+                                            {/* <a href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
                                             <a href="#" className="btn" onClick={handleSendCallContract}>Send Call</a>
-                                            <a href="#" className="btn" onClick={handleSendRunContract}>Send Run</a>
+                                            <a href="#" className="btn" onClick={handleSendRunContract}>Send Run</a> */}
                                         </div>
                                     </div>
                                 </div>

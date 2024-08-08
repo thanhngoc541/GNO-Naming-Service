@@ -10,12 +10,12 @@ interface MenuItem {
   }[];
 }[];
 
-const menu_data:MenuItem[]  = [
+const menu_data: MenuItem[] = [
   {
     id: 1,
     title: "Home +",
     link: "/",
-    has_dropdown: true,
+    has_dropdown: false,
     sub_menus: [
       { link: "/", title: "Home 01" },
       { link: "/home-2", title: "Home 02" },
@@ -26,7 +26,7 @@ const menu_data:MenuItem[]  = [
     id: 2,
     title: "Hosting",
     link: "/hosting",
-    has_dropdown: false,     
+    has_dropdown: false,
   },
   {
     id: 3,
@@ -46,10 +46,10 @@ const menu_data:MenuItem[]  = [
       { link: "/whois", title: "whois" },
       { link: "/login", title: "login" },
       { link: "/register", title: "register" },
-      { link: "/recover", title: "recover" }, 
+      { link: "/recover", title: "recover" },
     ],
   },
-  
+
   {
     id: 4,
     title: "News +",
@@ -57,16 +57,16 @@ const menu_data:MenuItem[]  = [
     has_dropdown: true,
     sub_menus: [
       { link: "/blog", title: "News Default" },
-      { link: "/blog-details", title: "News Details" }, 
+      { link: "/blog-details", title: "News Details" },
     ],
   },
   {
     id: 5,
     title: "Contact",
-    
+
     link: "/contact",
-    has_dropdown: false, 
+    has_dropdown: false,
   },
-  
+
 ];
 export default menu_data;

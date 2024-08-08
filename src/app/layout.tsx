@@ -3,6 +3,7 @@ import "../../styles/index.css";
 import { useEffect } from "react";
 import ScrollToTop from "../../components/hooks/scroll-to-top";
 import { animationCreate } from "../../components/utils/utils";
+import { AdenaWalletProvider } from "../../components/hooks/use-adena-wallet";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -28,8 +29,10 @@ export default function RootLayout({
           rel="stylesheet" />
       </head>
       <body>
+    <AdenaWalletProvider>
         {children}
         <ScrollToTop />
+    </AdenaWalletProvider>
         </body>
     </html>
   )

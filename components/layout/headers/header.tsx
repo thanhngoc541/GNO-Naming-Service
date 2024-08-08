@@ -13,8 +13,6 @@ const HeaderOne = () => {
     const [sidebarOppen, setSidebarOppen] = useState(false)
     const [searchOppen, setSearchOppen] = useState(false)
     console.log(isConnected, account);
-
-
     return (
         <>
             <header>
@@ -27,11 +25,11 @@ const HeaderOne = () => {
                                 </div>
                             </div>
                             <div className="col-xl-6 col-lg-6 d-none d-lg-block">
-                                <div className="main-menu text-center">
-                                    {/* <nav id="mobile-menu">
+                                {/* <div className="main-menu text-center">
+                                    <nav id="mobile-menu">
                                         <NavMenu />
-                                    </nav> */}
-                                </div>
+                                    </nav>
+                                </div> */}
                             </div>
                             <div className="col-xl-3 col-lg-3 col-md-7 d-flex flex-row-reverse align-items-center justify-content-xl-end">
                                 <div className="bar d-none d-xl-block">

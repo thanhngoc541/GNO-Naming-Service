@@ -4,10 +4,10 @@ import { AdenaWalletProvider } from "../../components/hooks/use-adena-wallet";
 
 const Home = () => {
   return (
-    <AdenaWalletProvider>
+    <>
       <HomeOne />
       <ScrollToTop />
-    </AdenaWalletProvider>
+    </>
   );
 };
 

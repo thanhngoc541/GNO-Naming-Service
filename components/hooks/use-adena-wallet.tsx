@@ -1,6 +1,7 @@
 "use client";
+import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
+import { JSONRPCProvider } from '@gnolang/tm2-js-client';
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-
 interface Response {
     status: string;
     code: number;
@@ -47,7 +48,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
             window.open("https://adena.app/", "_blank");
         } else {
             try {
-                await window.adena.AddEstablish("Adena");
+                await window.adena.AddEstablish("Gno Naming Service");
                 setIsConnected(true);
                 const response: Response = await window.adena.GetAccount();
                 try {
@@ -55,6 +56,20 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
                 } catch (error) {
                     console.error("Failed to parse JSON:", error);
                 }
+                // var provider = new JSONRPCProvider('https://chain.gnovar.site/');
+                // var r = await provider.getBalance('g1330dfff36jyy44rgq68y33mzxx9uhrgzyq88wh', 'ugnot');
+                // var r2 = await provider.getBlockResult(1309);
+                let provider2 = new GnoJSONRPCProvider('https://chain.gnovar.site/');
+                // console.log(provider2);
+                // var r3 = await provider2.getRenderOutput('gno.land/r/demo/foo20', '');
+                // // ## Hello World!
+                // // console.log(r)
+                // // console.log(r2)
+                // console.log(r3)
+                var r4 = await provider2.evaluateExpression('gno.land/r/varmeta/resolver', 'Resolve("ngoc.gno")')
+                console.log(r4)
+                // (10100000000 uint64)
+                // 100
             } catch (error) {
                 console.error('Error connecting to Adena wallet:', error);
             }
@@ -106,7 +121,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const result = await window.adena.DoContract({
+            const result = await window.adena.Sign({
                 messages: [{
                     type: "/vm.m_run",
                     value: {

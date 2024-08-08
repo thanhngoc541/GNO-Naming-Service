@@ -1,6 +1,25 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from "next/link";
 
 const DomainSearchBox = ({ style }: any) => {
+    const router = useRouter();
+    const [url, setUrl] = useState('');
+    const handleInputChange = (e: any) => {
+        setUrl(e.target.value);
+    };
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        if (url) {
+            if (url.slice(url.length - 4, url.length) != ".gno") router.push("domain/" + url + '.gno');
+            else
+                router.push("domain/" + url);
+        } else {
+            alert('Please enter a valid URL');
+        }
+    };
     return (
         <>
             <section className={`${style && "domain-search-section"}`}>
@@ -10,42 +29,17 @@ const DomainSearchBox = ({ style }: any) => {
                             <div className="col-xl-8 offset-xl-2">
                                 <div className="domain-search">
                                     <div className="position-relative">
-                                        <form onSubmit={(e) => e.preventDefault()}>
-                                            <input type="text" placeholder="Search for names you like..." />
+                                        <form onSubmit={handleSubmit}>
+                                            <input value={url}
+                                                onChange={handleInputChange} type="text" placeholder="Search for names you like..." />
 
                                             <button type="submit" className="btn btn-2">search</button>
                                             <div className="domain-select">
-                                                {/* <select name="select">
-                                                    <option value="1">All</option>
-                                                    <option value="1">.Net</option>
-                                                    <option value="1">.Com</option>
-                                                    <option value="1">.Org</option>
-                                                    <option value="1">.Co</option>
-                                                    <option value="1">.Biz</option>
-                                                </select> */}
-
-                                                {/* <select className="form-select" aria-label="Default select example">
-                                                    <option >All</option>
-                                                    <option value="1">.Net</option>
-                                                    <option value="2">.Com</option>
-                                                    <option value="3">.Org</option>
-                                                    <option value="4">.Co</option>
-                                                    <option value="5">.Biz</option>
-                                                </select> */}
-
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                                {/* <div className="domain-list mt-35 text-center">
-                                    <ul>
-                                        <li><Link href="#">.com / <span>$7.54</span></Link></li>
-                                        <li><Link className="active" href="#">.net / <span>$6.89</span></Link></li>
-                                        <li><Link href="#">.org / <span>$8.54</span></Link></li>
-                                        <li><Link href="#">.co / <span>$10.54</span></Link></li>
-                                        <li><Link href="#">.biz / <span>$9.54</span></Link></li>
-                                    </ul>
-                                </div> */}
+
                             </div>
                         </div>
                     </div>
