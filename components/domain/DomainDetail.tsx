@@ -104,7 +104,7 @@ const DomainDetail = () => {
                                     </div>
                                     <h2 className="mt-3 text-primary">Domain: {domain}</h2>
 
-                                    <p>Owner Address: {address}</p>
+                                    <p>{!isRegistered || "Owner Address:"} {address}</p>
 
                                     {isRegistered || <a href="#" className="btn" onClick={handleSendCallContract}>Register for {domain}</a>}
                                 </div>
