@@ -110,7 +110,7 @@ const HeroHomeOne = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            <div className="slider-bottom-img wow fadeInUp animated" data-wow-delay="1.3s">
+                            <div ref={myRef} className="slider-bottom-img wow fadeInUp animated" data-wow-delay="1.3s">
                                 <Image src={server_img} alt="theme-pure" />
                             </div>
                         </div>
@@ -118,7 +118,7 @@ const HeroHomeOne = () => {
                 </div>
 
             </section>
-            <div ref={myRef}>
+            <div >
                 <section className="domain-search-area pt-60 pb-120">
                     <div className="container">
                         <DomainSearchBox />
