@@ -33,6 +33,17 @@ const DomainDetail = () => {
                     10000000 // gasWanted
                 );
                 console.log('Transaction successful:', result);
+                const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/resolver', `Resolve("${domain}")`);
+                console.log(resolverResult);
+                const address = extractAddressFromRecordString(resolverResult);
+                console.log(address);
+                if (address) {
+                    setAddress(address);
+                    setRegistered(true);
+                }
+                else {
+                    setAddress("The domain is not registered yet");
+                }
             } catch (error) {
                 console.error('Transaction failed:', error);
             }
@@ -91,9 +102,9 @@ const DomainDetail = () => {
                                             style={{ width: '200px', height: '200px' }}
                                         />
                                     </div>
-                                    <h2 className="mt-3 text-primary">{domain}</h2>
+                                    <h2 className="mt-3 text-primary">Domain: {domain}</h2>
 
-                                    <p>{address}</p>
+                                    <p>Owner Address: {address}</p>
 
                                     {isRegistered || <a href="#" className="btn" onClick={handleSendCallContract}>Register for {domain}</a>}
                                 </div>
