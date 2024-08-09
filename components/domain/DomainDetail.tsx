@@ -21,9 +21,7 @@ const DomainDetail = () => {
     const provider = new GnoJSONRPCProvider('https://chain.gnovar.site/');
 
     const handleSendCallContract = async () => {
-        console.log(account);
         if (!account) await connect();
-        console.log(account);
         if (account) {
             try {
                 const result = await sendCallContract(
@@ -77,7 +75,6 @@ const DomainDetail = () => {
     }, [domain]);
     return (
         <>
-            <HeaderOne />
             <main>
                 <section
                     className="breadcrumb-area domain-header"

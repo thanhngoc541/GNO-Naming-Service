@@ -13,6 +13,7 @@ import DomainDetail from '../../../../components/domain/DomainDetail';
 const Profile = () => {
     return (
         <>
+            <HeaderOne />
             <DomainDetail></DomainDetail>
         </>
     );
