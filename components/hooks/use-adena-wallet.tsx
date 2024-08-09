@@ -22,7 +22,7 @@ interface Account {
 interface AdenaWalletContextProps {
     isConnected: boolean;
     account: Account | null;
-    connect: () => void;
+    connect: () => Promise<void>;
     disconnect: () => void;
     sendMsgContract: (fromAddress: string, toAddress: string, amount: string, memo: string) => Promise<any>;
     sendCallContract: (caller: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => Promise<any>;

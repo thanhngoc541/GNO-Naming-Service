@@ -7,12 +7,28 @@ import MobileMenus from './mobile-menus';
 import Logo from "../../../public/assets/img/logo/logo.png";
 import Image from 'next/image';
 import { useAdenaWallet } from '../../hooks/use-adena-wallet';
+import { useRouter } from 'next/navigation';
 
 const HeaderOne = () => {
     const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
     const [sidebarOppen, setSidebarOppen] = useState(false)
     const [searchOppen, setSearchOppen] = useState(false)
+    const [url, setUrl] = useState('');
+    const handleInputChange = (e: any) => {
+        setUrl(e.target.value);
+    };
+    const router = useRouter();
     console.log(isConnected, account);
+    const handleSearch = (e: any) => {
+        e.preventDefault();
+        if (url) {
+            if (url.slice(url.length - 4, url.length) != ".gno") router.push("domain/" + url + '.gno');
+            else
+                router.push("domain/" + url);
+        } else {
+            alert('Please enter a valid URL');
+        }
+    };
     return (
         <>
             <header>
@@ -43,9 +59,9 @@ const HeaderOne = () => {
                                         <div className="search-inner">
                                             <i className={`fas fa-times search-close ${searchOppen && "open"}`} onClick={() => setSearchOppen(false)} id="search-close"></i>
                                             <div className="search-cell">
-                                                <form onSubmit={(e) => e.preventDefault()}>
+                                                <form onSubmit={handleSearch}>
                                                     <div className="search-field-holder">
-                                                        <input type="search" className="main-search-input" placeholder="Search Your Keyword..." />
+                                                        <input onChange={handleInputChange} value={url} type="search" className="main-search-input" placeholder="Search For Domain..." />
                                                     </div>
                                                 </form>
                                             </div>
