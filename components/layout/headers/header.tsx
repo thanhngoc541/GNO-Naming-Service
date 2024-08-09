@@ -4,7 +4,7 @@ import NavMenu from './nav-menu';
 import { useState } from 'react';
 import SlideBar from './slide-bar';
 import MobileMenus from './mobile-menus';
-import Logo from "../../../public/assets/img/logo/logo.svg";
+import Logo from "../../../public/assets/img/logo/logo.png";
 import Image from 'next/image';
 import { useAdenaWallet } from '../../hooks/use-adena-wallet';
 
@@ -21,7 +21,7 @@ const HeaderOne = () => {
                         <div className="row">
                             <div className="col-xl-3 col-lg-3 col-md-5 d-flex align-items-lg-center">
                                 <div className="logo">
-                                    <Link href="/"> <Image src={Logo} alt="theme-pure" /> </Link>
+                                    <Link href="/"> <Image height={24} src={Logo} alt="theme-pure" /> </Link>
                                 </div>
                             </div>
                             <div className="col-xl-6 col-lg-6 d-none d-lg-block">

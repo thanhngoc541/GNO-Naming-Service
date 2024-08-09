@@ -16,7 +16,6 @@ const HomeOne = () => {
       <HeaderOne />
       <main>
         <HeroHomeOne />
-        <DomainSearch />
         {/* <ServicesHomeOne /> */}
         {/* <PricingHomeOne /> */}
         {/* <FAQHomeOne /> */}

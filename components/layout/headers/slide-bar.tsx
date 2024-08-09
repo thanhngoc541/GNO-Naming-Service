@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../../public/assets/img/logo/logo.svg";
+import Logo from "../../../public/assets/img/logo/logo.png";
 import SocialLinks from "../../common/social-links";
 
 
@@ -15,7 +15,7 @@ const SlideBar = ({ sidebarOppen, setSidebarOppen }: any) => {
                 </div>
                 <div className="logo-side mb-30">
                     <Link href="/">
-                        <Image src={Logo} alt="logo" />
+                        <Image height={24} src={Logo} alt="logo" />
                     </Link>
                 </div>
                 <div className="side-info mb-30">

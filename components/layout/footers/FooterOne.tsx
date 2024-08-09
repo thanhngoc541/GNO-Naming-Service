@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import SocialLinks from '../../common/social-links';
 import Image from 'next/image';
-import footer_logo from "../../../public/assets/img/logo/logo.svg";
+import footer_logo from "../../../public/assets/img/logo/logo.png";
 
 interface footer_links_type {
     id: number;
@@ -111,7 +111,7 @@ const FooterOne = () => {
                                 <div className="footer-bottom-area">
                                     <div className="widgets">
                                         <div className="footer-logo">
-                                            <Image src={footer_logo} alt="theme-pure" />
+                                            <Image src={footer_logo} height={24} alt="theme-pure" />
                                         </div>
                                         <p>{info_us}</p>
                                         <ul className="adress">

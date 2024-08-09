@@ -1,6 +1,6 @@
 import Image from "next/image";
 import SocialLinks, { CopyRight } from "../../common/social-links";
-import footer_logo from "../../../public/assets/img/logo/logo.svg";
+import footer_logo from "../../../public/assets/img/logo/logo.png";
 import Link from "next/link";
 
 interface footer_content_2_type {

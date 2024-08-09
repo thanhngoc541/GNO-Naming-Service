@@ -2,6 +2,9 @@
 import Image from "next/image";
 import server_img from "../../../public/assets/img/slider/server.png";
 import { useAdenaWallet } from '../../hooks/use-adena-wallet';
+import DomainSearch from "./DomainSearchHomeOne";
+import { useRef } from "react";
+import DomainSearchBox from "../../common/DomainSearchBox";
 
 interface hero_content_type {
     bg_img: string;
@@ -17,7 +20,13 @@ const { bg_img, sub_title, title } = hero_content
 
 const HeroHomeOne = () => {
     const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
-    console.log(isConnected, account)
+
+    const myRef = useRef<HTMLDivElement>(null); // Explicitly typing the ref
+
+    const scrollToComponent = () => {
+        myRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     const handleSendCallContract = async () => {
         if (account) {
             try {
@@ -85,7 +94,7 @@ const HeroHomeOne = () => {
                                             {title}
                                         </h2>
                                         <div className="slider-btn wow fadeInUp animated" data-wow-delay="0.9s">
-                                            <a href="#" className="btn">Get Started</a>
+                                            <a onClick={scrollToComponent} href="#" className="btn">Get Started</a>
                                             <a href="#" className="btn btn-border">Learn More</a>
                                             {/* <a href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
                                             <a href="#" className="btn" onClick={handleSendCallContract}>Send Call</a>
@@ -109,6 +118,13 @@ const HeroHomeOne = () => {
                 </div>
 
             </section>
+            <div ref={myRef}>
+                <section className="domain-search-area pt-60 pb-120">
+                    <div className="container">
+                        <DomainSearchBox />
+                    </div>
+                </section>
+            </div>
         </>
     );
 };

@@ -7,16 +7,36 @@ import FooterOne from "../layout/footers/FooterOne";
 import HeaderOne from "../layout/headers/header";
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import { useEffect, useState } from 'react';
+import { useAdenaWallet } from '../hooks/use-adena-wallet';
 
 
 // pages/profile.tsx
 const DomainDetail = () => {
+    const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
+
     const params = useParams();
     const [address, setAddress] = useState('');
     const [isRegistered, setRegistered] = useState(false);
     const { domain } = params;
     const provider = new GnoJSONRPCProvider('https://chain.gnovar.site/');
 
+    const handleSendCallContract = async () => {
+        if (account) {
+            try {
+                const result = await sendCallContract(
+                    account.address,
+                    'gno.land/r/varmeta/registrar', // Gnoland package path
+                    'Register', // Function name
+                    [domain.toString()], // Arguments
+                    1, // gasFee
+                    10000000 // gasWanted
+                );
+                console.log('Transaction successful:', result);
+            } catch (error) {
+                console.error('Transaction failed:', error);
+            }
+        }
+    };
     const extractAddressFromRecordString = (recordString: any) => {
         const addressRegex = /\("([^"]+)" std\.Address\)/;
 
@@ -75,6 +95,7 @@ const DomainDetail = () => {
 
                                     <p>{address}</p>
 
+                                    {isRegistered || <a href="#" className="btn" onClick={handleSendCallContract}>Register for {domain}</a>}
                                 </div>
                             </div>
                         </div>

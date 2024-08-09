@@ -45,7 +45,7 @@ const HeaderTwo = ({style}: style_type) => {
                                 {style ?
                                 <img src="/assets/img/logo/footer-logo.png" alt="theme-pure" />
                                 :
-                                <img src="/assets/img/logo/logo.svg" alt="theme-pure" />
+                                <img src="/assets/img/logo/logo.png" alt="theme-pure" />
                                 }
                                 </Link>
                             </div>
