@@ -13,42 +13,42 @@ interface footer_links_type {
 }
 // footer links data
 const footer_links: footer_links_type[] = [
-    {
-        id: 1,
-        title: "Our Products",
-        links: [
-            { title: "Shared", link: "#" },
-            { title: "hosting", link: "#" },
-            { title: "WordPress", link: "#" },
-            { title: "VPS", link: "#" },
-            { title: "hosting", link: "#" },
-            { title: "Dedicated", link: "#" },
-        ]
-    },
-    {
-        id: 2,
-        title: "Get Links",
-        links: [
-            { title: "About", link: "/about" },
-            { title: "hosting", link: "/hosting" },
-            { title: "faq", link: "/faq" },
-            { title: "News", link: "/blog" },
-            { title: "News Details", link: "/blog-details" },
-            { title: "Contact", link: "/contact" },
-        ]
-    },
-    {
-        id: 3,
-        title: "Our Company",
-        links: [
-            { title: "Chat", link: "#" },
-            { title: "Tickets", link: "#" },
-            { title: "Knowledge", link: "#" },
-            { title: "base", link: "#" },
-            { title: "System", link: "#" },
-            { title: "Marketing", link: "#" },
-        ]
-    }
+    // {
+    //     id: 1,
+    //     title: "Our Products",
+    //     links: [
+    //         { title: "Shared", link: "#" },
+    //         { title: "hosting", link: "#" },
+    //         { title: "WordPress", link: "#" },
+    //         { title: "VPS", link: "#" },
+    //         { title: "hosting", link: "#" },
+    //         { title: "Dedicated", link: "#" },
+    //     ]
+    // },
+    // {
+    //     id: 2,
+    //     title: "Get Links",
+    //     links: [
+    //         { title: "About", link: "/about" },
+    //         { title: "hosting", link: "/hosting" },
+    //         { title: "faq", link: "/faq" },
+    //         { title: "News", link: "/blog" },
+    //         { title: "News Details", link: "/blog-details" },
+    //         { title: "Contact", link: "/contact" },
+    //     ]
+    // },
+    // {
+    //     id: 3,
+    //     title: "Our Company",
+    //     links: [
+    //         { title: "Chat", link: "#" },
+    //         { title: "Tickets", link: "#" },
+    //         { title: "Knowledge", link: "#" },
+    //         { title: "base", link: "#" },
+    //         { title: "System", link: "#" },
+    //         { title: "Marketing", link: "#" },
+    //     ]
+    // }
 ]
 // footer content type
 interface footer_content_type {
@@ -74,7 +74,7 @@ const footer_content: footer_content_type = {
     mail: "ngocndt@var-meta.com",
     phone: "+8987 5675 754 6",
     website: "www.var-meta.com/",
-    footer_info: "The promotional price is for the first term only and renews.30-Day Money-Back Guarantee does not extend to domain names.",
+    // footer_info: "The promotional price is for the first term only and renews.30-Day Money-Back Guarantee does not extend to domain names.",
 
 }
 
