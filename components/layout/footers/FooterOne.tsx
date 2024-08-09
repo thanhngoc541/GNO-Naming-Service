@@ -74,8 +74,7 @@ const footer_content: footer_content_type = {
     mail: "ngocndt@var-meta.com",
     phone: "+8987 5675 754 6",
     website: "www.var-meta.com/",
-    // footer_info: "The promotional price is for the first term only and renews.30-Day Money-Back Guarantee does not extend to domain names.",
-
+    footer_info: ''
 }
 
 const { sub_title, title, price_title, price, info_us, address, mail, phone, website, footer_info } = footer_content
