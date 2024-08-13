@@ -69,7 +69,7 @@ const footer_content: footer_content_type = {
     title: "Sign Up For Web Hosting Today!",
     price_title: "Starting At Only",
     price: "2.75",
-    info_us: "Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt Lorem ipsum  ut labore et dolore magna.",
+    info_us: "",
     address: "68 Xô Viết Nghệ Tĩnh, Hoà Cường Nam, Hải Châu, Đà Nẵng 550000",
     mail: "ngocndt@var-meta.com",
     phone: "+8987 5675 754 6",

@@ -26,14 +26,14 @@ const DomainDetail = () => {
             try {
                 const result = await sendCallContract(
                     account.address,
-                    'gno.land/r/varmeta/registrar', // Gnoland package path
+                    'gno.land/r/demo/domain/registrar', // Gnoland package path
                     'Register', // Function name
                     [domain.toString()], // Arguments
                     1, // gasFee
                     10000000 // gasWanted
                 );
                 console.log('Transaction successful:', result);
-                const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/resolver', `Resolve("${domain}")`);
+                const resolverResult = await provider.evaluateExpression('gno.land/r/demo/domain/resolver', `Resolve("${domain}")`);
                 console.log(resolverResult);
                 const address = extractAddressFromRecordString(resolverResult);
                 console.log(address);
@@ -66,7 +66,7 @@ const DomainDetail = () => {
     useEffect(() => {
         const fetchDomainDetails = async () => {
             try {
-                const result = await provider.evaluateExpression('gno.land/r/varmeta/resolver', `Resolve("${domain}")`);
+                const result = await provider.evaluateExpression('gno.land/r/demo/domain/resolver', `Resolve("${domain}")`);
                 console.log(result);
                 const address = extractAddressFromRecordString(result);
                 console.log(address);

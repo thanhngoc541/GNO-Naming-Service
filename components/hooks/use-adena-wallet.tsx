@@ -66,7 +66,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
                 // // console.log(r)
                 // // console.log(r2)
                 // console.log(r3)
-                var r4 = await provider2.evaluateExpression('gno.land/r/varmeta/resolver', 'Resolve("ngoc.gno")')
+                var r4 = await provider2.evaluateExpression('gno.land/r/demo/domain/resolver', 'GetDomainName("g1330dfff36jyy44rgq68y33mzxx9uhrgzyq88wh")')
                 console.log(r4)
                 // (10100000000 uint64)
                 // 100
