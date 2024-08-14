@@ -28,7 +28,7 @@
 
 /* LG  Device :992px. */
 
-@media (min-width: 992px) and (max-width: 1200px) 
+@media (min-width: 992px) and (max-width: 1200px)
  {
 .header-space {
 	padding-right: 0;
@@ -441,11 +441,24 @@
 
 }
 
+
 .domain-search .btn {
 
 	position: static;
 
 	margin-top: 13px;
+
+	display: inline-block;
+
+}
+
+.domain-register .btn {
+
+	position: static;
+
+	margin-top: 0;
+
+	padding: 19px 30px;
 
 	display: inline-block;
 
@@ -771,7 +784,7 @@
 @media (min-width: 1200px) and (max-width: 1500px){
 	.header-space {
 		padding-right: 50px !important;
-		padding-left: 50px !important;	
+		padding-left: 50px !important;
 	}
 	.slider-text.slider-text-2 h2{
 		font-size: 33px !important;
@@ -819,10 +832,9 @@
 		margin-top: 0 !important;
 	}
 }
-	
+
 @media (max-width: 767px) {
-	.domain-search .btn{ 
+	.domain-search .btn{
 		top: 0px !important;
 	}
 }
-	

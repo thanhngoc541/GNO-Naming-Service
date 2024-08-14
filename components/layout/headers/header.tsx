@@ -22,9 +22,9 @@ const HeaderOne = () => {
     const handleSearch = (e: any) => {
         e.preventDefault();
         if (url) {
-            if (url.slice(url.length - 4, url.length) != ".gno") router.push("domain/" + url + '.gno');
+            if (url.slice(url.length - 4, url.length) != ".gno") router.push("/domain/" + url + '.gno');
             else
-                router.push("domain/" + url);
+                router.push("/domain/" + url);
         } else {
             alert('Please enter a valid URL');
         }
@@ -68,7 +68,7 @@ const HeaderOne = () => {
                                         </div>
                                     </div>
                                 }
-                                <div className="header-btn d-none d-md-block">
+                                <div className="header-btn ">
                                     <div>
 
                                         {!isConnected ? (
