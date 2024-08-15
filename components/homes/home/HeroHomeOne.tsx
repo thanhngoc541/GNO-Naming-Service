@@ -77,7 +77,7 @@ const HeroHomeOne = () => {
             <div >
                 <section className="domain-search-area pt-60 pb-120">
                     <div className="container">
-                        {/* <DomainSearchBox /> */}
+                        <DomainSearchBox />
                     </div>
                 </section>
             </div>
