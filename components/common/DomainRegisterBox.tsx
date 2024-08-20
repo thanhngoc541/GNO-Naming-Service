@@ -29,7 +29,7 @@ const DomainRegisterBox = ({ style }: any) => {
         e.preventDefault();
         if (url) {
             gnoUrl = url;
-            if (url.slice(url.length - 4, url.length) != ".gno") gnoUrl = url + '.gno'
+            if (url.slice(url.length - 4, url.length) != ".gno") gnoUrl = url + '.gno';
             const resolverResult = await provider.evaluateExpression('gno.land/r/demo/domain/resolver', `Resolve("${gnoUrl}")`);
             console.log(resolverResult);
             const address = extractAddressFromRecordString(resolverResult);
@@ -38,6 +38,7 @@ const DomainRegisterBox = ({ style }: any) => {
                 setUrl('');
             }
             else {
+                await handleApproveContract();
                 handleSendCallContract();
             }
         } else {
@@ -66,6 +67,32 @@ const DomainRegisterBox = ({ style }: any) => {
             } catch (error) {
                 console.error('Transaction failed:', error);
                 alert(`Register for domain ${gnoUrl} failed!`);
+            }
+            setUrl('');
+        }
+    };
+    const handleApproveContract = async () => {
+        if (!account) await connect();
+        if (account) {
+            try {
+                const result = await sendCallContract(
+                    account.address,
+                    'gno.land/r/demo/domain/vmt', // Gnoland package path
+                    'Approve', // Function name
+                    ["g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4", "10"], // Arguments
+                    1, // gasFee
+                    10000000 // gasWanted
+                );
+                console.log('Approve successful:', result);
+                if (result.status === 'success') {
+                    alert(`Approve for contract g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4 success!`);
+                }
+                else {
+                    alert(`Approve for contract g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4 failed!`);
+                }
+            } catch (error) {
+                console.error('Approve failed:', error);
+                alert(`Approve for contract g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4 failed!`);
             }
             setUrl('');
         }
