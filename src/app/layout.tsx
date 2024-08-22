@@ -1,9 +1,9 @@
 "use client"
-import "../../styles/index.css";
 import { useEffect } from "react";
 import ScrollToTop from "../../components/hooks/scroll-to-top";
-import { animationCreate } from "../../components/utils/utils";
 import { AdenaWalletProvider } from "../../components/hooks/use-adena-wallet";
+import { animationCreate } from "../../components/utils/utils";
+import "../../styles/index.css";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -11,8 +11,7 @@ if (typeof window !== "undefined") {
 
 export default function RootLayout({
   children,
-}:{ children: React.ReactNode })
-{
+}: { children: React.ReactNode }) {
   useEffect(() => {
     setTimeout(() => {
       animationCreate();
@@ -29,11 +28,11 @@ export default function RootLayout({
           rel="stylesheet" />
       </head>
       <body>
-    <AdenaWalletProvider>
-        {children}
-        <ScrollToTop />
-    </AdenaWalletProvider>
-        </body>
+        <AdenaWalletProvider>
+          {children}
+          <ScrollToTop />
+        </AdenaWalletProvider>
+      </body>
     </html>
   )
 }
