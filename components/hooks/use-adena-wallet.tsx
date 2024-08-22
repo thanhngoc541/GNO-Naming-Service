@@ -141,7 +141,6 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
             console.error('Adena wallet is not available');
             return;
         }
-
         try {
             const result = await window.adena.DoContract({
                 messages: [{
@@ -153,7 +152,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }],
                 gasFee: 1,
-                gasWanted: 1000000,
+                gasWanted: 10000000,
                 memo: memo
             });
             console.log('Transaction result:', result);

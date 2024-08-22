@@ -181,7 +181,7 @@ label {
 	margin-right: 8px;
 }
 .btn:hover{
-	border-color: #926bfa;
+	border-color: #002bb7;
 	background: none;
 	color: #fff
 }
@@ -3418,4 +3418,47 @@ a{
 .error-btn:hover{
 	color: #000c35;
 
+}
+
+@keyframes customFadeIn {
+	from {
+	  opacity: 0;
+	  transform: translateY(-0);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+
+  @keyframes customFadeOut {
+	from {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+	to {
+	  opacity: 0;
+	  transform: translateY(-0);
+	}
+  }
+
+  .modal.custom-fade-in {
+	animation: customFadeIn 0.3s ease-out forwards;
+  }
+
+  .modal.custom-fade-out {
+	animation: customFadeOut 0.3s ease-out forwards;
+  }
+
+.modal-header, .modal-footer{
+	border: none;
+}
+.modal-content{
+	padding: 20px;
+	border: none;
+	border-radius:32px;
+}
+.modal-title{
+	width:100%;
+	text-align: center;
 }

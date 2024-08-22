@@ -3,9 +3,10 @@ import Image from "next/image";
 import server_img from "../../../public/assets/img/slider/server.png";
 import { useAdenaWallet } from '../../hooks/use-adena-wallet';
 import DomainSearch from "./DomainSearchHomeOne";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import DomainSearchBox from "../../common/DomainSearchBox";
 import DomainRegisterBox from "../../common/DomainRegisterBox";
+import RegisterPopupModal from "../../modals/register-popup";
 
 interface hero_content_type {
     bg_img: string;
@@ -23,7 +24,6 @@ const HeroHomeOne = () => {
     const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
 
     const myRef = useRef<HTMLDivElement>(null); // Explicitly typing the ref
-
     console.log(isConnected, account);
 
     const scrollToComponent = () => {
@@ -33,6 +33,7 @@ const HeroHomeOne = () => {
     return (
         <>
             <section className="slider-area position-relative">
+
                 <div className="slider-ac">
                     <div className="single-slider slider-height" style={{ backgroundImage: `url(${bg_img})` }}>
                         <div className="container">
@@ -49,13 +50,7 @@ const HeroHomeOne = () => {
                                             <div className="pt-20">
                                                 <DomainRegisterBox />
                                             </div>
-                                            {/* <a onClick={scrollToComponent} href="#" className="btn">Get Started</a> */}
-                                            {/* <a href="#" className="btn btn-border">Learn More</a> */}
-                                            {/* <a href="#" className="btn" onClick={handleSendMsgContract}>Send Msg</a>
-                                            <a href="#" className="btn" onClick={handleSendCallContract}>Send Call</a>
-                                            <a href="#" className="btn" onClick={handleSendRunContract}>Send Run</a> */}
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

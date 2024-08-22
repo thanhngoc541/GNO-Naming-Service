@@ -8,47 +8,21 @@ import HeaderOne from "../layout/headers/header";
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import { useEffect, useState } from 'react';
 import { useAdenaWallet } from '../hooks/use-adena-wallet';
+import RegisterPopupModal from '../modals/register-popup';
 
 
 // pages/profile.tsx
 const DomainDetail = () => {
-    const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
-
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => {
+        setShowModal(false);
+    }
     const params = useParams();
     const [address, setAddress] = useState('');
     const [isRegistered, setRegistered] = useState(false);
     const { domain } = params;
     const provider = new GnoJSONRPCProvider('https://chain.gnovar.site/');
-
-    const handleSendCallContract = async () => {
-        if (!account) await connect();
-        if (account) {
-            try {
-                const result = await sendCallContract(
-                    account.address,
-                    'gno.land/r/demo/domain/registrar', // Gnoland package path
-                    'Register', // Function name
-                    [domain.toString()], // Arguments
-                    1, // gasFee
-                    10000000 // gasWanted
-                );
-                console.log('Transaction successful:', result);
-                const resolverResult = await provider.evaluateExpression('gno.land/r/demo/domain/resolver', `Resolve("${domain}")`);
-                console.log(resolverResult);
-                const address = extractAddressFromRecordString(resolverResult);
-                console.log(address);
-                if (address) {
-                    setAddress(address);
-                    setRegistered(true);
-                }
-                else {
-                    setAddress("The domain is not registered yet");
-                }
-            } catch (error) {
-                console.error('Transaction failed:', error);
-            }
-        }
-    };
     const extractAddressFromRecordString = (recordString: any) => {
         const addressRegex = /\("([^"]+)" std\.Address\)/;
 
@@ -59,9 +33,6 @@ const DomainDetail = () => {
         }
         return null;
     };
-
-
-
     console.log('Extracted Address:', address);
     useEffect(() => {
         const fetchDomainDetails = async () => {
@@ -86,6 +57,7 @@ const DomainDetail = () => {
     }, [domain]);
     return (
         <>
+            <RegisterPopupModal domain={domain.toString()} show={showModal} handleClose={handleClose} />
             <main>
                 <section
                     className="breadcrumb-area domain-header"
@@ -106,7 +78,7 @@ const DomainDetail = () => {
 
                                     <p>{!isRegistered || "Owner Address:"} {address}</p>
 
-                                    {isRegistered || <a href="#" className="btn" onClick={handleSendCallContract}>Register for {domain}</a>}
+                                    {isRegistered || <a href="#" className="btn btn-2" onClick={handleShow}>Register for {domain}</a>}
                                 </div>
                             </div>
                         </div>
