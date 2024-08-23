@@ -23,7 +23,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
         modifiedDomain = `${modifiedDomain}.gno`;
     }
 
-    const handleSendCallContract = async () => {
+    const handleSendCallContract = async (type: string = 'gnot') => {
         if (!account) await connect();
         if (account) {
             try {
@@ -31,7 +31,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
                     account.address,
                     'gno.land/r/demo/domain/registrar', // Gnoland package path
                     'Register', // Function name
-                    [modifiedDomain.toString()], // Arguments
+                    [modifiedDomain.toString(), type], // Arguments
                     1, // gasFee
                     10000000 // gasWanted
                 );
@@ -60,7 +60,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
                 );
                 console.log('sendMsgContract successful:', result);
                 if (result.status === 'success') {
-                    await handleSendCallContract();
+                    await handleSendCallContract('gnot');
                 } else {
                     alert(`Send Gnot failed!`);
                 }
@@ -85,7 +85,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
                 );
                 console.log('Approve successful:', result);
                 if (result.status === 'success') {
-                    await handleSendCallContract();
+                    await handleSendCallContract('token');
                 } else {
                     alert(`Approve for contract g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4 failed!`);
                 }
