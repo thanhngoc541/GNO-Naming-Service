@@ -25,10 +25,12 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
 
     const handleSendCallContract = async (type: string = 'gnot') => {
         if (!account) await connect();
+        console.log(type)
         if (account) {
             try {
                 const result = await sendCallContract(
                     account.address,
+                    type == 'gnot' ? "100ugnot" : "",
                     'gno.land/r/demo/domain/registrar', // Gnoland package path
                     'Register', // Function name
                     [modifiedDomain.toString(), type], // Arguments
@@ -48,28 +50,6 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
         }
     };
 
-    const handleSendMsgContract = async () => {
-        if (!account) await connect();
-        if (account) {
-            try {
-                const result = await sendMsgContract(
-                    account.address,
-                    'g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4',
-                    '1000000ugnot',
-                    ""
-                );
-                console.log('sendMsgContract successful:', result);
-                if (result.status === 'success') {
-                    await handleSendCallContract('gnot');
-                } else {
-                    alert(`Send Gnot failed!`);
-                }
-            } catch (error) {
-                console.error('sendMsgContract failed:', error);
-                alert(`Send Gnot failed!`);
-            }
-        }
-    };
 
     const handleApproveContract = async () => {
         if (!account) await connect();
@@ -77,6 +57,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
             try {
                 const result = await sendCallContract(
                     account.address,
+                    "",
                     'gno.land/r/demo/domain/vmt', // Gnoland package path
                     'Approve', // Function name
                     ["g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4", "10"], // Arguments
@@ -98,7 +79,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
 
     const handlePayGnot = async () => {
         handleClose();
-        await handleSendMsgContract();
+        await handleSendCallContract('gnot');
     }
 
     const handlePayVMT = async () => {

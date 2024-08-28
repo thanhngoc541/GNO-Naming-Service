@@ -25,7 +25,7 @@ interface AdenaWalletContextProps {
     connect: () => Promise<void>;
     disconnect: () => void;
     sendMsgContract: (fromAddress: string, toAddress: string, amount: string, memo: string) => Promise<any>;
-    sendCallContract: (caller: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => Promise<any>;
+    sendCallContract: (caller: string, send: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => Promise<any>;
     sendRunContract: (caller: string, packageName: string, packagePath: string, fileName: string, fileBody: string, gasFee: number, gasWanted: number) => Promise<any>;
 }
 
@@ -71,7 +71,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
         setAccount(null);
     };
 
-    const sendCallContract = useCallback(async (caller: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => {
+    const sendCallContract = useCallback(async (caller: string, send: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => {
         if (!window.adena) {
             console.error('Adena wallet is not available');
             return;
@@ -83,7 +83,7 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
                     type: "/vm.m_call",
                     value: {
                         caller: caller, // your Adena address
-                        send: "",
+                        send: send,
                         pkg_path: pkgPath, // Gnoland package path
                         func: func, // Function name
                         args: args // Arguments
