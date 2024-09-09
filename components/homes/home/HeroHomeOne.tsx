@@ -6,7 +6,6 @@ import DomainSearch from "./DomainSearchHomeOne";
 import { useRef, useState } from "react";
 import DomainSearchBox from "../../common/DomainSearchBox";
 import DomainRegisterBox from "../../common/DomainRegisterBox";
-import RegisterPopupModal from "../../modals/register-popup";
 
 interface hero_content_type {
     bg_img: string;

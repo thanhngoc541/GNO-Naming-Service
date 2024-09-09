@@ -8,21 +8,17 @@ import HeaderOne from "../layout/headers/header";
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import { useEffect, useState } from 'react';
 import { useAdenaWallet } from '../hooks/use-adena-wallet';
-import RegisterPopupModal from '../modals/register-popup';
 
 
 // pages/profile.tsx
 const DomainDetail = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
-    const handleShow = () => setShowModal(true);
-    const handleClose = () => {
-        setShowModal(false);
-    }
+    const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
     const params = useParams();
     const [address, setAddress] = useState('');
     const [isRegistered, setRegistered] = useState(false);
     const { domain } = params;
-    const provider = new GnoJSONRPCProvider('https://chain.gnovar.site/');
+    const provider = new GnoJSONRPCProvider('https://rpc.test4.gno.land:443/');
     const extractAddressFromRecordString = (recordString: any) => {
         const addressRegex = /\("([^"]+)" std\.Address\)/;
 
@@ -33,11 +29,35 @@ const DomainDetail = () => {
         }
         return null;
     };
-    console.log('Extracted Address:', address);
+    const handleRegistrar = async (domain: string) => {
+        if (!account) await connect();
+        if (account) {
+            try {
+                const result = await sendCallContract(
+                    account.address,
+                    "100ugnot",
+                    'gno.land/r/varmeta/demo1/domain/registrar', // Gnoland package path
+                    'Register', // Function name
+                    [domain, "gnot"], // Arguments
+                    1, // gasFee
+                    10000000 // gasWanted
+                );
+                console.log('Transaction successful:', result);
+                if (result.status === 'success') {
+                    alert(`Register for domain ${domain} success!`);
+                } else {
+                    alert(`Register for domain ${domain} failed!`);
+                }
+            } catch (error) {
+                console.error('Transaction failed:', error);
+                alert(`Register for domain ${domain} failed!`);
+            }
+        }
+    };
     useEffect(() => {
         const fetchDomainDetails = async () => {
             try {
-                const result = await provider.evaluateExpression('gno.land/r/demo/domain/resolver', `Resolve("${domain}")`);
+                const result = await provider.evaluateExpression('gno.land/r/varmeta/demo1/domain/resolver', `Resolve("${domain}")`);
                 console.log(result);
                 const address = extractAddressFromRecordString(result);
                 console.log(address);
@@ -54,10 +74,9 @@ const DomainDetail = () => {
         };
 
         fetchDomainDetails();
-    }, [domain]);
+    }, [domain, provider]);
     return (
         <>
-            <RegisterPopupModal domain={domain.toString()} show={showModal} handleClose={handleClose} />
             <main>
                 <section
                     className="breadcrumb-area domain-header"
@@ -78,13 +97,13 @@ const DomainDetail = () => {
 
                                     <p>{!isRegistered || "Owner Address:"} {address}</p>
 
-                                    {isRegistered || <a href="#" className="btn btn-2" onClick={handleShow}>Register for {domain}</a>}
+                                    {isRegistered || <a href="#" className="btn btn-2" onClick={() => { handleRegistrar(domain.toString()) }}>Register for {domain}</a>}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            </main>
+            </main >
             <FooterOne />
 
 
