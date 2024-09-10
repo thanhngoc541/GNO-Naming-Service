@@ -31,7 +31,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
                 const result = await sendCallContract(
                     account.address,
                     type == 'gnot' ? "100ugnot" : "",
-                    'gno.land/r/varmeta/demo1/domain/registrar', // Gnoland package path
+                    'gno.land/r/varmeta/demo/v1/domain/registrar', // Gnoland package path
                     'Register', // Function name
                     [modifiedDomain.toString(), type], // Arguments
                     1, // gasFee
@@ -58,7 +58,7 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
                 const result = await sendCallContract(
                     account.address,
                     "",
-                    'gno.land/r/demo/domain/vmt', // Gnoland package path
+                    'gno.land/r/varmeta/demo/v1/domain/vmt', // Gnoland package path
                     'Approve', // Function name
                     ["g1rl9kp5g2w6szy4tntvmsm0cmae928l2nwlngr4", "10"], // Arguments
                     1, // gasFee

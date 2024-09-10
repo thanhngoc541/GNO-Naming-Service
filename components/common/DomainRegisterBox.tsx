@@ -31,7 +31,7 @@ const DomainRegisterBox = ({ style }: any) => {
         if (url) {
             gnoUrl = url;
             if (url.slice(url.length - 4, url.length) != ".gno") gnoUrl = url + '.gno';
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo1/domain/resolver', `Resolve("${gnoUrl}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v1/domain/resolver', `Resolve("${gnoUrl}")`);
             console.log(resolverResult);
             const address = extractAddressFromRecordString(resolverResult);
             if (address) {
@@ -53,7 +53,7 @@ const DomainRegisterBox = ({ style }: any) => {
                 const result = await sendCallContract(
                     account.address,
                     "100ugnot",
-                    'gno.land/r/varmeta/demo1/domain/registrar', // Gnoland package path
+                    'gno.land/r/varmeta/demo/v1/domain/registrar', // Gnoland package path
                     'Register', // Function name
                     [domain, "gnot"], // Arguments
                     1, // gasFee

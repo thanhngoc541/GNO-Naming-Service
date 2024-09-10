@@ -36,7 +36,7 @@ const DomainDetail = () => {
                 const result = await sendCallContract(
                     account.address,
                     "100ugnot",
-                    'gno.land/r/varmeta/demo1/domain/registrar', // Gnoland package path
+                    'gno.land/r/varmeta/demo/v1/domain/registrar', // Gnoland package path
                     'Register', // Function name
                     [domain, "gnot"], // Arguments
                     1, // gasFee
@@ -57,7 +57,7 @@ const DomainDetail = () => {
     useEffect(() => {
         const fetchDomainDetails = async () => {
             try {
-                const result = await provider.evaluateExpression('gno.land/r/varmeta/demo1/domain/resolver', `Resolve("${domain}")`);
+                const result = await provider.evaluateExpression('gno.land/r/varmeta/demo/v1/domain/resolver', `Resolve("${domain}")`);
                 console.log(result);
                 const address = extractAddressFromRecordString(result);
                 console.log(address);
