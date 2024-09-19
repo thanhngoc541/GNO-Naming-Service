@@ -20,15 +20,7 @@ const hero_content: hero_content_type = {
 const { bg_img, sub_title, title } = hero_content
 
 const HeroHomeOne = () => {
-    const { isConnected, account, connect, disconnect, sendMsgContract, sendCallContract, sendRunContract } = useAdenaWallet();
-
-    const myRef = useRef<HTMLDivElement>(null); // Explicitly typing the ref
-    console.log(isConnected, account);
-
-    const scrollToComponent = () => {
-        myRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
+    console.log("render HeroHomeOne")
     return (
         <>
             <section className="slider-area position-relative">
@@ -60,7 +52,7 @@ const HeroHomeOne = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            <div ref={myRef} className="slider-bottom-img wow fadeInUp animated" data-wow-delay="1.3s">
+                            <div className="slider-bottom-img wow fadeInUp animated" data-wow-delay="1.3s">
                                 <Image src={server_img} alt="theme-pure" />
                             </div>
                         </div>

@@ -3,6 +3,7 @@ import HeaderOne from "../../layout/headers/header";
 import HeroHomeOne from "./HeroHomeOne";
 
 const HomeOne = () => {
+  console.log("render home one");
   return (
     <>
       <HeaderOne />

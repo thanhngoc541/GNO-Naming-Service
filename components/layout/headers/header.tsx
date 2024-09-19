@@ -18,7 +18,6 @@ const HeaderOne = () => {
         setUrl(e.target.value);
     };
     const router = useRouter();
-    console.log(isConnected, account);
     const handleSearch = (e: any) => {
         e.preventDefault();
         if (url) {
