@@ -1,4 +1,5 @@
 "use client";
+
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import { JSONRPCProvider } from '@gnolang/tm2-js-client';
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
@@ -63,7 +64,9 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
-        window.onload = connect;
+        if (typeof window !== "undefined") {
+            connect();
+        }
     }, []);
 
     const disconnect = () => {

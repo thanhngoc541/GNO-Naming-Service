@@ -1,8 +1,7 @@
 "use client"
-import { useEffect } from "react";
+
 import ScrollToTop from "../../components/hooks/scroll-to-top";
 import { AdenaWalletProvider } from "../../components/hooks/use-adena-wallet";
-import { animationCreate } from "../../components/utils/utils";
 import "../../styles/index.css";
 
 if (typeof window !== "undefined") {
@@ -12,12 +11,7 @@ if (typeof window !== "undefined") {
 export default function RootLayout({
   children,
 }: { children: React.ReactNode }) {
-  useEffect(() => {
-    setTimeout(() => {
-      animationCreate();
-    }, 500);
-  }, []);
-
+  
   return (
     <html lang="en">
       <head>
