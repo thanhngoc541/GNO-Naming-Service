@@ -1,19 +1,20 @@
-"use client"
+"use client";
 
+import { useEffect } from "react";
 import ScrollToTop from "../../components/hooks/scroll-to-top";
 import { AdenaWalletProvider } from "../../components/hooks/use-adena-wallet";
 import "../../styles/index.css";
 
-if (typeof window !== "undefined") {
-  require("bootstrap/dist/js/bootstrap");
-}
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 
-export default function RootLayout({
-  children,
-}: { children: React.ReactNode }) {
-  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      require("bootstrap/dist/js/bootstrap");
+    }
+  }, []);
+
   return (
-    <html lang="en">
+    <html lang="en" >
       <head>
         <title>Naming Service | VAR META</title>
         <link rel="icon" href="/favicon.png" type="image/png" />
@@ -28,5 +29,5 @@ export default function RootLayout({
         </AdenaWalletProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
-import { JSONRPCProvider } from '@gnolang/tm2-js-client';
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+
 interface Response {
     status: string;
     code: number;
@@ -40,62 +39,54 @@ export const useAdenaWallet = () => {
     return context;
 };
 
+declare global {
+    interface Window {
+        adena: {
+            AddEstablish: (appName: string) => Promise<void>;
+            GetAccount: () => Promise<Response>;
+            DoContract: (params: any) => Promise<any>;
+            Sign: (params: any) => Promise<any>;
+        };
+    }
+}
+
 export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [account, setAccount] = useState<Account | null>(null);
 
-    const connect = async () => {
-        if (!window.adena) {
-            window.open("https://adena.app/", "_blank");
-        } else {
-            try {
-                await window.adena.AddEstablish("Gno Naming Service");
-                setIsConnected(true);
-                const response: Response = await window.adena.GetAccount();
-                try {
-                    setAccount(response?.data as Account);
-                } catch (error) {
-                    console.error("Failed to parse JSON:", error);
-                }
-            } catch (error) {
-                console.error('Error connecting to Adena wallet:', error);
-            }
+    const connect = useCallback(async () => {
+        // Ensure this only runs on the client side
+        if (typeof window === 'undefined' || !window.adena) {
+            return;
         }
-    };
 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            connect();
+        try {
+            await window.adena.AddEstablish("Gno Naming Service");
+            setIsConnected(true);
+            const response: Response = await window.adena.GetAccount();
+            setAccount(response.data);
+        } catch (error) {
+            console.error('Error connecting to Adena wallet:', error);
         }
     }, []);
 
-    const disconnect = () => {
+    const disconnect = useCallback(() => {
         setIsConnected(false);
         setAccount(null);
-    };
+    }, []);
 
     const sendCallContract = useCallback(async (caller: string, send: string, pkgPath: string, func: string, args: string[], gasFee: number, gasWanted: number) => {
-        if (!window.adena) {
-            console.error('Adena wallet is not available');
-            return;
-        }
+        if (!window.adena) throw new Error('Adena wallet is not available');
 
         try {
             const result = await window.adena.DoContract({
                 messages: [{
                     type: "/vm.m_call",
-                    value: {
-                        caller: caller, // your Adena address
-                        send: send,
-                        pkg_path: pkgPath, // Gnoland package path
-                        func: func, // Function name
-                        args: args // Arguments
-                    }
+                    value: { caller, send, pkg_path: pkgPath, func, args }
                 }],
-                gasFee: gasFee,
-                gasWanted: gasWanted
+                gasFee,
+                gasWanted,
             });
-            console.log('Transaction result:', result);
             return result;
         } catch (error) {
             console.error('Error sending contract transaction:', error);
@@ -104,34 +95,21 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const sendRunContract = useCallback(async (caller: string, packageName: string, packagePath: string, fileName: string, fileBody: string, gasFee: number, gasWanted: number) => {
-        if (!window.adena) {
-            console.error('Adena wallet is not available');
-            return;
-        }
+        if (!window.adena) throw new Error('Adena wallet is not available');
 
         try {
             const result = await window.adena.Sign({
                 messages: [{
                     type: "/vm.m_run",
                     value: {
-                        caller: caller, // your Adena address
+                        caller,
                         send: "",
-                        package: {
-                            Name: packageName,
-                            Path: packagePath,
-                            Files: [
-                                {
-                                    Name: fileName,
-                                    Body: fileBody,
-                                }
-                            ]
-                        }
+                        package: { Name: packageName, Path: packagePath, Files: [{ Name: fileName, Body: fileBody }] },
                     }
                 }],
-                gasFee: gasFee,
-                gasWanted: gasWanted
+                gasFee,
+                gasWanted,
             });
-            console.log('Transaction result:', result);
             return result;
         } catch (error) {
             console.error('Error sending run contract:', error);
@@ -140,25 +118,18 @@ export const AdenaWalletProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const sendMsgContract = useCallback(async (fromAddress: string, toAddress: string, amount: string, memo: string) => {
-        if (!window.adena) {
-            console.error('Adena wallet is not available');
-            return;
-        }
+        if (!window.adena) throw new Error('Adena wallet is not available');
+
         try {
             const result = await window.adena.DoContract({
                 messages: [{
                     type: "/bank.MsgSend",
-                    value: {
-                        from_address: fromAddress,
-                        to_address: toAddress,
-                        amount: amount // e.g., "5000000ugnot"
-                    }
+                    value: { from_address: fromAddress, to_address: toAddress, amount }
                 }],
                 gasFee: 1,
                 gasWanted: 10000000,
-                memo: memo
+                memo,
             });
-            console.log('Transaction result:', result);
             return result;
         } catch (error) {
             console.error('Error sending transaction:', error);

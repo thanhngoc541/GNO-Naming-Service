@@ -15,7 +15,6 @@ const HeaderOne = () => {
     const [sidebarOppen, setSidebarOppen] = useState(false);
     const [searchOppen, setSearchOppen] = useState(false);
     const [url, setUrl] = useState('');
-
     const router = useRouter();
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

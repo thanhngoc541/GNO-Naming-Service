@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import Image from "next/image";
 import server_img from "../../../public/assets/img/slider/server.png";
@@ -22,7 +22,6 @@ const hero_content: hero_content_type = {
 const { bg_img, sub_title, title } = hero_content
 
 const HeroHomeOne = () => {
-    console.log("render HeroHomeOne")
     return (
         <>
             <section className="slider-area position-relative">

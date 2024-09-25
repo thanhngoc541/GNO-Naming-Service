@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from "react";
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import { useAdenaWallet } from "../hooks/use-adena-wallet";
@@ -25,7 +27,7 @@ const AuctionList = () => {
             }
             const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v39/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
-
+            alert(extractedStrings)
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
                 newAuctionData.push({
@@ -42,21 +44,24 @@ const AuctionList = () => {
     };
 
     const extractValuesFromString = (input: string) => {
-        let result = [];
+        const results = [];
 
-        const stringRegex = /\"([^\"]*)\"/g;
-        let stringMatch;
-        while ((stringMatch = stringRegex.exec(input)) !== null) {
-            result.push(stringMatch[1]);
+        // Regex to match either strings or int64 values
+        const regex = /"([^"]*)"|\b\d{13}\b/g;
+
+        let match;
+        while ((match = regex.exec(input)) !== null) {
+            // If the match is a string (group 1), push it as is
+            if (match[1]) {
+                results.push(match[1]);
+            }
+            // Otherwise, it's an int64, so convert to number and push
+            else {
+                results.push(Number(match[0]));
+            }
         }
 
-        const int64Regex = /\b\d{13}\b/g;
-        let int64Match;
-        while ((int64Match = int64Regex.exec(input)) !== null) {
-            result.push(parseInt(int64Match[0], 10));
-        }
-
-        return result;
+        return results;
     };
 
     const openModal = (url: string, step: string) => {
@@ -68,11 +73,13 @@ const AuctionList = () => {
     };
 
     useEffect(() => {
+
         const initialize = async () => {
             if (!account) {
                 await connect();
             }
         };
+
 
         initialize();
 

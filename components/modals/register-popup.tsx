@@ -25,7 +25,6 @@ const RegisterPopupModal: React.FC<RegisterPopupModalProps> = ({ domain, show, h
 
     const handleSendCallContract = async (type: string = 'gnot') => {
         if (!account) await connect();
-        console.log(type)
         if (account) {
             try {
                 const result = await sendCallContract(

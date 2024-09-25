@@ -1,5 +1,3 @@
-
-// ExampleComponent.js
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -58,9 +56,7 @@ const DomainDetail = () => {
         const fetchDomainDetails = async () => {
             try {
                 const result = await provider.evaluateExpression('gno.land/r/varmeta/demo/v3/domain/resolver', `Resolve("${domain}")`);
-                console.log(result);
                 const address = extractAddressFromRecordString(result);
-                console.log(address);
                 if (address) {
                     setAddress(address);
                     setRegistered(true);

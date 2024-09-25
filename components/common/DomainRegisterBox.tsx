@@ -11,7 +11,6 @@ const DomainRegisterBox = ({ style }: any) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('');
     const provider = new GnoJSONRPCProvider('https://rpc.test4.gno.land:443/');
-    console.log("DomainRegisterBox")
     const handleShow = useCallback(() => setShowModal(true), []);
     const handleClose = useCallback(() => {
         setUrl('');
