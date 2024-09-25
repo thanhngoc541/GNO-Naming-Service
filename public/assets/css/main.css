@@ -3450,3 +3450,14 @@ a{
 	width:100%;
 	text-align: center;
 }
+.good-luck-message {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24;           /* Dark red text */
+    padding: 10px 20px;        /* Padding for some space around the text */
+    border: 1px solid #f5c6cb; /* Light red border */
+    border-radius: 5px;        /* Rounded corners */
+    font-size: 18px;           /* Larger font size */
+    font-weight: bold;         /* Bold text */
+    text-align: center;        /* Center the text */
+    margin-top: 20px;          /* Some space above */
+}

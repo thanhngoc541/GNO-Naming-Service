@@ -27,7 +27,6 @@ const AuctionList = () => {
             }
             const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v39/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
-            alert(extractedStrings)
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
                 newAuctionData.push({
@@ -89,6 +88,20 @@ const AuctionList = () => {
     }, [account, connect]);
 
     const renderAction = (domain: string, status: string) => {
+        const regex = /^([a-zA-Z0-9]+) is claiming domain name:/;
+
+        const match = status.match(regex);
+
+        if (match) {
+            const address = match[1];
+            if (account && account.address === address) {
+                return <button className="btn btn-2">Claim Domain</button>;
+            } else {
+                return <div className="good-luck-message">
+                    <p>Good luck next time!</p>
+                </div>
+            }
+        }
         switch (status) {
             case 'hash':
                 return <button onClick={() => openModal(domain, '1')} className="btn btn-2">Commit Hash</button>;
@@ -113,9 +126,9 @@ const AuctionList = () => {
             <div className="price-area pt-110 pb-120">
                 <div className="container">
                     <div className="row">
-                        <div className="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2">
+                        <div className="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 pb-50">
                             <div className="section-title text-center">
-                                <h2>Auctions</h2>
+                                <h2>Joined Auctions</h2>
                             </div>
                         </div>
                     </div>
@@ -136,7 +149,7 @@ const AuctionList = () => {
                                                 <td className="tb-title">{auction.domain}</td>
                                                 <td>{auction.endCommitTime.toLocaleString()}</td>
                                                 <td>{auction.endPriceTime.toLocaleString()}</td>
-                                                <td>{auction.status}</td>
+                                                <td>{auction.status.includes("claiming") ? "claiming" : auction.status}</td>
                                                 <td>
                                                     {renderAction(auction.domain, auction.status)}
                                                 </td>
