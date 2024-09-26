@@ -6,8 +6,8 @@ import { useAdenaWallet } from "../hooks/use-adena-wallet";
 import CommitPopupModal from '../modals/commit-popup';
 
 const AuctionList = () => {
-    const { isConnected, account, connect } = useAdenaWallet();
-    const [modalContent, setModalContent] = useState<{ step: string, url: string, show: boolean }>({ step: '', url: '', show: false });
+    const { isConnected, account, connect, sendCallContract } = useAdenaWallet();
+    const [modalContent, setModalContent] = useState<{ action: string, url: string, show: boolean }>({ action: '', url: '', show: false });
 
     interface Auction {
         domain: string;
@@ -22,10 +22,13 @@ const AuctionList = () => {
     const fetchAuctionData = async () => {
         try {
             if (!account || !account.address) {
+                alert("Account is null or does not have an address.");
                 console.error("Account is null or does not have an address.");
                 return;
             }
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v39/domain/registrar', `GetJoinedBid("${account.address}")`);
+
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v401/domain/registrar', `GetJoinedBid("${account.address}")`);
+            alert(resolverResult)
             const extractedStrings = extractValuesFromString(resolverResult);
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
@@ -40,6 +43,36 @@ const AuctionList = () => {
         } catch (error) {
             console.error("Failed to fetch auction data:", error);
         }
+    };
+
+    const handleClaim = async (domain: string) => {
+        try {
+            if (!account || !account.address) {
+                console.error("Account is null or does not have an address.");
+                return;
+            }
+
+            const result = await sendCallContract(
+                account.address,
+                "100ugnot",
+                'gno.land/r/varmeta/demo/v401/domain/registrar',
+                'Claim',
+                [domain],
+                1,
+                10000000
+            );
+
+            console.log('Transaction successful:', result);
+            if (result.status === 'success') {
+                alert(`Claim for domain ${domain} success!`);
+            } else {
+                alert(`Claim for domain ${domain} failed!`);
+            }
+        } catch (error) {
+            console.error('Transaction failed:', error);
+            alert(`Claim for domain ${domain} failed!`);
+        }
+
     };
 
     const extractValuesFromString = (input: string) => {
@@ -63,8 +96,8 @@ const AuctionList = () => {
         return results;
     };
 
-    const openModal = (url: string, step: string) => {
-        setModalContent({ url, step, show: true });
+    const openModal = (url: string, action: string) => {
+        setModalContent({ url, action, show: true });
     };
 
     const handleClose = () => {
@@ -88,33 +121,49 @@ const AuctionList = () => {
     }, [account, connect]);
 
     const renderAction = (domain: string, status: string) => {
-        const regex = /^([a-zA-Z0-9]+) is claiming domain name:/;
+        const claimingRegex = /^([a-zA-Z0-9]+) is claiming domain name:/;
+        const claimingMatch = status.match(claimingRegex);
 
-        const match = status.match(regex);
-
-        if (match) {
-            const address = match[1];
+        if (claimingMatch) {
+            const address = claimingMatch[1];
             if (account && account.address === address) {
-                return <button className="btn btn-2">Claim Domain</button>;
+                return <button onClick={() => handleClaim(domain)} className="btn btn-2">Claim Domain</button>;
             } else {
                 return <div className="good-luck-message">
                     <p>Good luck next time!</p>
                 </div>
             }
         }
+
+        const addressRegex = /^owned by ([a-zA-Z0-9]+)$/;
+        const addressMatch = status.match(addressRegex);
+
+        if (addressMatch) {
+            const address = addressMatch[1];
+            if (account && account.address === address) {
+                return <div className="good-luck-message">
+                    <p>Claimed</p>
+                </div>;
+            } else {
+                return <div className="good-luck-message">
+                    <p>Good luck next time!</p>
+                </div>;
+            }
+        }
+
+
         switch (status) {
             case 'hash':
-                return <button onClick={() => openModal(domain, '1')} className="btn btn-2">Commit Hash</button>;
+                return <button onClick={() => openModal(domain, 'commitHash')} className="btn btn-2">Commit Hash</button>;
 
             case 'commited hash':
                 return <button className="btn btn-2">Waiting for commit price</button>;
 
             case 'price':
-                return <button onClick={() => openModal(domain, '2')} className="btn btn-2">Commit Price</button>;
+                return <button onClick={() => openModal(domain, 'commitPrice')} className="btn btn-2">Commit Price</button>;
 
             case 'closed':
                 return <button className="btn btn-2" >See owner</button>;
-
             default:
                 return <button className="btn btn-2">{status}</button>;
         }
@@ -122,7 +171,7 @@ const AuctionList = () => {
 
     return (
         <>
-            <CommitPopupModal step={modalContent.step} domain={modalContent.url} show={modalContent.show} handleClose={handleClose} />
+            <CommitPopupModal action={modalContent.action} domain={modalContent.url} show={modalContent.show} handleClose={handleClose} />
             <div className="price-area pt-110 pb-120">
                 <div className="container">
                     <div className="row">

@@ -8,18 +8,20 @@ import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 interface CommitPopupModalProps {
     domain: string;
     show: boolean;
-    step: string;
+    action: string;
     handleClose: () => void;
 }
 
-const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, step, handleClose }) => {
+const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, action, handleClose }) => {
     const [isClient, setIsClient] = useState(false);
     const { account, connect, sendCallContract } = useAdenaWallet();
     const provider = new GnoJSONRPCProvider('https://rpc.test4.gno.land:443/');
     const [secret, setSecret] = useState('');
     const [price, setPrice] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [isChecked, setIsChecked] = useState(false); // New state for the checkbox
+    const [isChecked, setIsChecked] = useState(false); // State for the checkbox (only for commitHash)
+    const [step, setStep] = useState(1); // Step state to handle multiple steps for commitHash
+    const [hashedString, setHashedString] = useState(''); // State to store the hash string
 
     useEffect(() => {
         setIsClient(true);
@@ -39,62 +41,87 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, step,
         modifiedDomain = `${modifiedDomain}.gno`;
     }
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const resetData = () => {
+        // Reset all state values
+        setSecret('');
+        setPrice('');
+        setIsChecked(false);
+        setStep(1);
+        setHashedString('');
+    };
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         if (!account) await connect();
 
         if (account) {
             try {
                 setIsLoading(true);
-                let modifiedDomain = domain;
-                if (!modifiedDomain.endsWith('.gno')) {
-                    modifiedDomain = `${modifiedDomain}.gno`;
-                }
 
-                const tempJoinString = secret + price;
-                const hashedString = await hashString(tempJoinString);
-
-                let result;
-                if (step === '1') {
-                    result = await sendCallContract(
+                if (step === 1 && action === 'commitHash') {
+                    // Step 1: Hash the secret + price and proceed to Step 2 for commitHash
+                    const tempJoinString = secret + price;
+                    const hashedStringResult = await hashString(tempJoinString);
+                    setHashedString(hashedStringResult);
+                    setStep(2); // Move to step 2 where hash string is shown
+                } else if (step === 2 && action === 'commitHash') {
+                    // Step 2: Submit the hash string for commitHash
+                    const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v39/domain/registrar',
+                        'gno.land/r/varmeta/demo/v401/domain/registrar',
                         'CommitHash',
                         [modifiedDomain, hashedString],
                         1,
                         10000000
                     );
-                } else {
-                    result = await sendCallContract(
+
+                    if (result.status === 'success') {
+                        alert(`Register for domain ${modifiedDomain} success!`);
+                    } else {
+                        alert(`Register for domain ${modifiedDomain} failed!`);
+                    }
+
+                    resetData(); // Reset after submission
+                    handleClose(); // Close modal after submission
+                } else if (action === 'commitPrice') {
+                    // Directly handle commitPrice without steps or checkbox
+                    const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v39/domain/registrar',
+                        'gno.land/r/varmeta/demo/v401/domain/registrar',
                         'CommitPrice',
                         [price, secret, modifiedDomain],
                         1,
                         10000000
                     );
-                }
 
-                if (result.status === 'success') {
-                    alert(`Register for domain ${modifiedDomain} success!`);
-                } else {
-                    alert(`Register for domain ${modifiedDomain} failed!`);
+                    if (result.status === 'success') {
+                        alert(`Register for domain ${modifiedDomain} success!`);
+                    } else {
+                        alert(`Register for domain ${modifiedDomain} failed!`);
+                    }
+
+                    resetData(); // Reset after submission
+                    handleClose(); // Close modal after submission
                 }
             } catch (error) {
                 console.error('Transaction failed:', error);
                 alert(`Register for domain ${modifiedDomain} failed!`);
             } finally {
                 setIsLoading(false);
-                handleClose(); // Close modal after submission
             }
         }
     };
 
+    const handleCancel = () => {
+        resetData(); // Reset all state when canceling
+        handleClose(); // Close the modal
+    };
+
     const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (e.target === e.currentTarget) {
-            handleClose();
+            handleCancel(); // Call the cancel handler on backdrop click
         }
     };
 
@@ -115,68 +142,159 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, step,
                 >
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">{step === '1' ? "Add your bidding" : "Commit secret and price"}</h4>
+                            <h4 className="modal-title">{action === 'commitHash' ? "Add your bidding" : "Commit secret and price"}</h4>
                         </div>
                         <div className="modal-body">
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group mb-4">
-                                    <label htmlFor="secret" className="form-label fw-bold">Secret</label>
-                                    <input
-                                        type="text"
-                                        id="secret"
-                                        className="form-control custom-input"
-                                        placeholder="Enter your secret key"
-                                        value={secret}
-                                        onChange={(e) => setSecret(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group mb-4">
-                                    <label htmlFor="price" className="form-label fw-bold">Price (in Gnot)</label>
-                                    <input
-                                        type="number"
-                                        id="price"
-                                        className="form-control custom-input"
-                                        placeholder="Enter your price"
-                                        value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                        required
-                                    />
+                            {action === 'commitHash' && step === 1 ? (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group mb-4">
+                                        <label htmlFor="secret" className="form-label fw-bold">Secret</label>
+                                        <input
+                                            type="text"
+                                            id="secret"
+                                            className="form-control custom-input"
+                                            placeholder="Enter your secret key"
+                                            value={secret}
+                                            onChange={(e) => setSecret(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <label htmlFor="price" className="form-label fw-bold">Price (in Gnot)</label>
+                                        <input
+                                            type="number"
+                                            id="price"
+                                            className="form-control custom-input"
+                                            placeholder="Enter your price"
+                                            value={price}
+                                            onChange={(e) => setPrice(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="form-group form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id="confirmCheck"
+                                            checked={isChecked}
+                                            onChange={() => setIsChecked(!isChecked)}
+                                            required
+                                        />
+                                        <label className="form-check-label" htmlFor="confirmCheck">
+                                            I understand that I need to save the secret and price now, as I will need them to submit in the next step.
+                                        </label>
+                                    </div>
+
+                                    <div className="modal-footer d-flex justify-content-between" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        <button
+                                            type="button"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill me-2"
+                                            onClick={handleCancel} // Trigger cancel with reset
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill"
+                                            disabled={!isChecked || isLoading}
+                                        >
+                                            {isLoading ? 'Processing...' : 'Next'}
+                                        </button>
+                                    </div>
+                                </form>
+                            ) : action === 'commitHash' && step === 2 ? (
+                                <div>
+                                    <h5 className="fw-bold">Your Generated Hash</h5>
+                                    <p
+                                        style={{
+                                            wordBreak: 'break-all',   // Ensures the hash breaks into new lines if it's too long
+                                            overflowWrap: 'break-word', // Breaks long words
+                                            maxHeight: '100px',        // Optional: limits the height of the container
+                                            overflow: 'auto',          // Optional: adds scroll if content exceeds the height
+                                            padding: '10px',           // Optional: padding for better readability
+                                            border: '1px solid #ccc',  // Optional: adds border around the hash for better visibility
+                                            borderRadius: '5px'        // Optional: adds rounded corners
+                                        }}
+                                    >
+                                        {hashedString}
+                                    </p>
+                                    <p className="mt-3">
+                                        <strong >Important:</strong> You are about to commit the hash only. Your secret and price will not be included in this step.
+                                        Please ensure you securely save both your secret and price, as they will be required for future steps in the process. Losing them may result in an inability to complete the registration.
+                                    </p>
+                                    <div className="modal-footer d-flex justify-content-between" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        <button
+                                            type="button"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill me-2"
+                                            onClick={handleCancel} // Trigger cancel with reset
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill"
+                                            onClick={handleSubmit}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Processing...' : 'Submit'}
+                                        </button>
+                                    </div>
                                 </div>
 
-                                {/* Add checkbox here */}
-                                <div className="form-group form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id="confirmCheck"
-                                        checked={isChecked}
-                                        onChange={() => setIsChecked(!isChecked)}
-                                        required
-                                    />
-                                    <label className="form-check-label" htmlFor="confirmCheck">
-                                        I understand that I need to save the secret and price now, as I will need them to submit in the next step.
-                                    </label>
-                                </div>
-                                <div className="modal-footer d-flex justify-content-between" style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                    <button
-                                        type="button"
-                                        style={{ padding: '19px 30px' }}
-                                        className="btn btn-secondary flex-fill me-2"
-                                        onClick={handleClose}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        style={{ padding: '19px 30px' }}
-                                        className="btn btn-primary flex-fill"
-                                        disabled={!isChecked || isLoading}
-                                    >
-                                        {isLoading ? 'Processing...' : 'Submit'}
-                                    </button>
-                                </div>
-                            </form>
+
+                            ) : (
+                                // This form handles the commitPrice action (no steps, no checkbox)
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group mb-4">
+                                        <label htmlFor="secret" className="form-label fw-bold">Secret</label>
+                                        <input
+                                            type="text"
+                                            id="secret"
+                                            className="form-control custom-input"
+                                            placeholder="Enter your secret key"
+                                            value={secret}
+                                            onChange={(e) => setSecret(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <label htmlFor="price" className="form-label fw-bold">Price (in Gnot)</label>
+                                        <input
+                                            type="number"
+                                            id="price"
+                                            className="form-control custom-input"
+                                            placeholder="Enter your price"
+                                            value={price}
+                                            onChange={(e) => setPrice(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="modal-footer d-flex justify-content-between" style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        <button
+                                            type="button"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill me-2"
+                                            onClick={handleCancel} // Trigger cancel with reset
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            style={{ padding: '19px 30px' }}
+                                            className="btn btn-2 flex-fill"
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Processing...' : 'Submit'}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>

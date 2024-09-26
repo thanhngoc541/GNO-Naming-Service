@@ -6,7 +6,7 @@ import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import CommitPopupModal from '../modals/commit-popup';
 
 const DomainRegisterBox = ({ style }: any) => {
-    const [step, setStep] = useState<string>('');
+    const [action, setAction] = useState<string>('');
     const { isConnected, account, connect } = useAdenaWallet();
     const [showModal, setShowModal] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('');
@@ -36,17 +36,17 @@ const DomainRegisterBox = ({ style }: any) => {
 
             try {
                 const resolverResult = await provider.evaluateExpression(
-                    'gno.land/r/varmeta/demo/v39/domain/registrar',
+                    'gno.land/r/varmeta/demo/v401/domain/registrar',
                     `GetCurrentStatus("${gnoUrl}","${account.address}")`
                 );
                 const status = extractStringBetweenQuotes(resolverResult);
                 alert(status);
 
                 if (status === 'domain name is free' || status === 'hash' || status === 'new auction') {
-                    setStep('1');
+                    setAction('commitHash');
                     handleShow();
                 } else if (status === 'price') {
-                    setStep('2');
+                    setAction('commitPrice');
                     handleShow();
                 }
             } catch (error) {
@@ -59,7 +59,7 @@ const DomainRegisterBox = ({ style }: any) => {
 
     return (
         <>
-            <CommitPopupModal step={step} domain={url} show={showModal} handleClose={handleClose} />
+            <CommitPopupModal action={action} domain={url} show={showModal} handleClose={handleClose} />
             <section className={`${style && 'domain-search-section'}`}>
                 <div className={`${style && 'container'}`}>
                     <div className={`${style && 'domain-box'}`}>
