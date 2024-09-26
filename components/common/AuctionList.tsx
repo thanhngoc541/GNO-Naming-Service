@@ -27,9 +27,9 @@ const AuctionList = () => {
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v401/domain/registrar', `GetJoinedBid("${account.address}")`);
-            alert(resolverResult)
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v402/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
+
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
                 newAuctionData.push({
@@ -55,16 +55,16 @@ const AuctionList = () => {
             const result = await sendCallContract(
                 account.address,
                 "100ugnot",
-                'gno.land/r/varmeta/demo/v401/domain/registrar',
+                'gno.land/r/varmeta/demo/v402/domain/registrar',
                 'Claim',
                 [domain],
                 1,
                 10000000
             );
 
-            console.log('Transaction successful:', result);
             if (result.status === 'success') {
                 alert(`Claim for domain ${domain} success!`);
+                await fetchAuctionData(); // Refetch auction data after claim
             } else {
                 alert(`Claim for domain ${domain} failed!`);
             }
@@ -72,24 +72,18 @@ const AuctionList = () => {
             console.error('Transaction failed:', error);
             alert(`Claim for domain ${domain} failed!`);
         }
-
     };
 
     const extractValuesFromString = (input: string) => {
         const results = [];
-
-        // Regex to match either strings or int64 values
-        const regex = /"([^"]*)"|\b\d{13}\b/g;
+        const regex = /"([^"]*)"|\b\d{13}\b/g; // Regex to match strings or int64 values
 
         let match;
         while ((match = regex.exec(input)) !== null) {
-            // If the match is a string (group 1), push it as is
             if (match[1]) {
-                results.push(match[1]);
-            }
-            // Otherwise, it's an int64, so convert to number and push
-            else {
-                results.push(Number(match[0]));
+                results.push(match[1]); // If the match is a string, push as is
+            } else {
+                results.push(Number(match[0])); // Convert int64 values to numbers
             }
         }
 
@@ -100,18 +94,16 @@ const AuctionList = () => {
         setModalContent({ url, action, show: true });
     };
 
-    const handleClose = () => {
+    const handleClose = async () => {
         setModalContent(prev => ({ ...prev, show: false }));
     };
 
     useEffect(() => {
-
         const initialize = async () => {
             if (!account) {
                 await connect();
             }
         };
-
 
         initialize();
 
@@ -131,7 +123,7 @@ const AuctionList = () => {
             } else {
                 return <div className="good-luck-message">
                     <p>Good luck next time!</p>
-                </div>
+                </div>;
             }
         }
 
@@ -151,15 +143,14 @@ const AuctionList = () => {
             }
         }
 
-
         switch (status) {
-            case 'hash':
+            case 'waiting hash':
                 return <button onClick={() => openModal(domain, 'commitHash')} className="btn btn-2">Commit Hash</button>;
 
             case 'commited hash':
                 return <button className="btn btn-2">Waiting for commit price</button>;
 
-            case 'price':
+            case 'waiting price':
                 return <button onClick={() => openModal(domain, 'commitPrice')} className="btn btn-2">Commit Price</button>;
 
             case 'closed':
@@ -168,10 +159,12 @@ const AuctionList = () => {
                 return <button className="btn btn-2">{status}</button>;
         }
     };
-
+    const handleSubmitSuccess = async () => {
+        await fetchAuctionData();
+    };
     return (
         <>
-            <CommitPopupModal action={modalContent.action} domain={modalContent.url} show={modalContent.show} handleClose={handleClose} />
+            <CommitPopupModal action={modalContent.action} domain={modalContent.url} show={modalContent.show} handleClose={handleClose} onSubmitSuccess={handleSubmitSuccess} />
             <div className="price-area pt-110 pb-120">
                 <div className="container">
                     <div className="row">

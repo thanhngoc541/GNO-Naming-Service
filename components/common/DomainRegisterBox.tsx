@@ -5,7 +5,7 @@ import { useAdenaWallet } from '../hooks/use-adena-wallet';
 import { GnoJSONRPCProvider } from '@gnolang/gno-js-client';
 import CommitPopupModal from '../modals/commit-popup';
 
-const DomainRegisterBox = ({ style }: any) => {
+const DomainRegisterBox = ({ style, onRegisterSuccess }: any) => {
     const [action, setAction] = useState<string>('');
     const { isConnected, account, connect } = useAdenaWallet();
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -36,7 +36,7 @@ const DomainRegisterBox = ({ style }: any) => {
 
             try {
                 const resolverResult = await provider.evaluateExpression(
-                    'gno.land/r/varmeta/demo/v401/domain/registrar',
+                    'gno.land/r/varmeta/demo/v402/domain/registrar',
                     `GetCurrentStatus("${gnoUrl}","${account.address}")`
                 );
                 const status = extractStringBetweenQuotes(resolverResult);
@@ -59,7 +59,7 @@ const DomainRegisterBox = ({ style }: any) => {
 
     return (
         <>
-            <CommitPopupModal action={action} domain={url} show={showModal} handleClose={handleClose} />
+            <CommitPopupModal action={action} domain={url} show={showModal} handleClose={handleClose} onSubmitSuccess={onRegisterSuccess} />
             <section className={`${style && 'domain-search-section'}`}>
                 <div className={`${style && 'container'}`}>
                     <div className={`${style && 'domain-box'}`}>

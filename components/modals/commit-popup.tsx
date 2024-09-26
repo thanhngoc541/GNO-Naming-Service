@@ -10,9 +10,10 @@ interface CommitPopupModalProps {
     show: boolean;
     action: string;
     handleClose: () => void;
+    onSubmitSuccess: () => void;
 }
 
-const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, action, handleClose }) => {
+const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, action, handleClose, onSubmitSuccess }) => {
     const [isClient, setIsClient] = useState(false);
     const { account, connect, sendCallContract } = useAdenaWallet();
     const provider = new GnoJSONRPCProvider('https://rpc.test4.gno.land:443/');
@@ -59,17 +60,17 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                 setIsLoading(true);
 
                 if (step === 1 && action === 'commitHash') {
-                    // Step 1: Hash the secret + price and proceed to Step 2 for commitHash
+                    // Step 1: Hash the secret + price and proceed to Step 2
                     const tempJoinString = secret + price;
                     const hashedStringResult = await hashString(tempJoinString);
                     setHashedString(hashedStringResult);
                     setStep(2); // Move to step 2 where hash string is shown
                 } else if (step === 2 && action === 'commitHash') {
-                    // Step 2: Submit the hash string for commitHash
+                    // Step 2: Submit the hash string to the contract
                     const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v401/domain/registrar',
+                        'gno.land/r/varmeta/demo/v402/domain/registrar',
                         'CommitHash',
                         [modifiedDomain, hashedString],
                         1,
@@ -77,19 +78,19 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                     );
 
                     if (result.status === 'success') {
-                        alert(`Register for domain ${modifiedDomain} success!`);
+                        alert(`Commit hash for domain ${modifiedDomain} success!`);
+                        onSubmitSuccess(); // Trigger success callback to parent
                     } else {
-                        alert(`Register for domain ${modifiedDomain} failed!`);
+                        alert(`Commit hash for domain ${modifiedDomain} failed!`);
                     }
 
-                    resetData(); // Reset after submission
                     handleClose(); // Close modal after submission
                 } else if (action === 'commitPrice') {
                     // Directly handle commitPrice without steps or checkbox
                     const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v401/domain/registrar',
+                        'gno.land/r/varmeta/demo/v402/domain/registrar',
                         'CommitPrice',
                         [price, secret, modifiedDomain],
                         1,
@@ -97,17 +98,17 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                     );
 
                     if (result.status === 'success') {
-                        alert(`Register for domain ${modifiedDomain} success!`);
+                        alert(`Commit price for domain ${modifiedDomain} success!`);
+                        onSubmitSuccess(); // Trigger success callback to parent
                     } else {
-                        alert(`Register for domain ${modifiedDomain} failed!`);
+                        alert(`Commit price for domain ${modifiedDomain} failed!`);
                     }
 
-                    resetData(); // Reset after submission
                     handleClose(); // Close modal after submission
                 }
             } catch (error) {
                 console.error('Transaction failed:', error);
-                alert(`Register for domain ${modifiedDomain} failed!`);
+                alert(`Transaction for domain ${modifiedDomain} failed!`);
             } finally {
                 setIsLoading(false);
             }
