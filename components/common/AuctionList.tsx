@@ -138,7 +138,7 @@ const AuctionList = () => {
                                 <table className="table">
                                     <thead className="theme-bg">
                                         <tr>
-                                            {["Domain Name", "Commit Hash", "Comfirm Price", "Status", "Actions"].map((item, index) => (
+                                            {["Domain Name", "Commit Hash", "Confirm Price", "Status", "Actions"].map((item, index) => (
                                                 <th key={index} scope="col">{item}</th>
                                             ))}
                                         </tr>
