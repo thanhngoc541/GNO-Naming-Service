@@ -6,7 +6,7 @@ import { useAdenaWallet } from "../hooks/use-adena-wallet";
 import CommitPopupModal from '../modals/commit-popup';
 
 const AuctionList = () => {
-    const { isConnected, account, connect, sendCallContract } = useAdenaWallet();
+    const { account, connect, sendCallContract } = useAdenaWallet();
     const [modalContent, setModalContent] = useState<{ action: string, url: string, show: boolean }>({ action: '', url: '', show: false });
 
     interface Auction {
@@ -17,19 +17,20 @@ const AuctionList = () => {
     }
 
     const [auctionData, setAuctionData] = useState<Auction[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);  // Loading state
     const provider = new GnoJSONRPCProvider('https://rpc.test4.gno.land:443/');
 
+    // Function to fetch auction data
     const fetchAuctionData = async () => {
         try {
+            setLoading(true);
             if (!account || !account.address) {
                 alert("Account is null or does not have an address.");
-                console.error("Account is null or does not have an address.");
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v402/domain/registrar', `GetJoinedBid("${account.address}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v403/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
-
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
                 newAuctionData.push({
@@ -39,9 +40,11 @@ const AuctionList = () => {
                     endPriceTime: new Date(Number(extractedStrings[i + 3]))
                 });
             }
-            setAuctionData(newAuctionData); // Set the auction data
+            setAuctionData(newAuctionData);  // Update auction data state
         } catch (error) {
             console.error("Failed to fetch auction data:", error);
+        } finally {
+            setLoading(false);  // Turn off loading state
         }
     };
 
@@ -55,7 +58,7 @@ const AuctionList = () => {
             const result = await sendCallContract(
                 account.address,
                 "100ugnot",
-                'gno.land/r/varmeta/demo/v402/domain/registrar',
+                'gno.land/r/varmeta/demo/v403/domain/registrar',
                 'Claim',
                 [domain],
                 1,
@@ -64,7 +67,7 @@ const AuctionList = () => {
 
             if (result.status === 'success') {
                 alert(`Claim for domain ${domain} success!`);
-                await fetchAuctionData(); // Refetch auction data after claim
+                await fetchAuctionData();  // Refetch auction data after claim
             } else {
                 alert(`Claim for domain ${domain} failed!`);
             }
@@ -81,9 +84,9 @@ const AuctionList = () => {
         let match;
         while ((match = regex.exec(input)) !== null) {
             if (match[1]) {
-                results.push(match[1]); // If the match is a string, push as is
+                results.push(match[1]);  // If the match is a string, push as is
             } else {
-                results.push(Number(match[0])); // Convert int64 values to numbers
+                results.push(Number(match[0]));  // Convert int64 values to numbers
             }
         }
 
@@ -98,6 +101,11 @@ const AuctionList = () => {
         setModalContent(prev => ({ ...prev, show: false }));
     };
 
+    const handleSubmitSuccess = async () => {
+        await fetchAuctionData();
+    };
+
+    // Fetch auction data on component mount
     useEffect(() => {
         const initialize = async () => {
             if (!account) {
@@ -121,9 +129,7 @@ const AuctionList = () => {
             if (account && account.address === address) {
                 return <button onClick={() => handleClaim(domain)} className="btn btn-2">Claim Domain</button>;
             } else {
-                return <div className="good-luck-message">
-                    <p>Good luck next time!</p>
-                </div>;
+                return <div className="good-luck-message"><p>Good luck next time!</p></div>;
             }
         }
 
@@ -133,13 +139,9 @@ const AuctionList = () => {
         if (addressMatch) {
             const address = addressMatch[1];
             if (account && account.address === address) {
-                return <div className="good-luck-message">
-                    <p>Claimed</p>
-                </div>;
+                return <div className="good-luck-message"><p>Claimed</p></div>;
             } else {
-                return <div className="good-luck-message">
-                    <p>Good luck next time!</p>
-                </div>;
+                return <div className="good-luck-message"><p>Good luck next time!</p></div>;
             }
         }
 
@@ -155,50 +157,68 @@ const AuctionList = () => {
 
             case 'closed':
                 return <button className="btn btn-2" >See owner</button>;
+
             default:
                 return <button className="btn btn-2">{status}</button>;
         }
     };
-    const handleSubmitSuccess = async () => {
-        await fetchAuctionData();
-    };
+
     return (
         <>
-            <CommitPopupModal action={modalContent.action} domain={modalContent.url} show={modalContent.show} handleClose={handleClose} onSubmitSuccess={handleSubmitSuccess} />
+            <CommitPopupModal
+                action={modalContent.action}
+                domain={modalContent.url}
+                show={modalContent.show}
+                handleClose={handleClose}
+                onSubmitSuccess={handleSubmitSuccess}
+            />
             <div className="price-area pt-110 pb-120">
                 <div className="container">
                     <div className="row">
                         <div className="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2 pb-50">
-                            <div className="section-title text-center">
-                                <h2>Joined Auctions</h2>
+                            <div className="d-flex justify-content-center align-items-center">
+                                <h2 className="section-title">Joined Auctions  </h2>
+                                <div onClick={fetchAuctionData} className="pl-10">
+                                    <i className="fa fa-sync"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
                             <div className="price-table white-bg table-responsive">
-                                <table className="table">
-                                    <thead className="theme-bg">
-                                        <tr>
-                                            {["Domain Name", "Commit Hash", "Confirm Price", "Status", "Actions"].map((item, index) => (
-                                                <th key={index} scope="col">{item}</th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {auctionData.map((auction, index) => (
-                                            <tr key={index}>
-                                                <td className="tb-title">{auction.domain}</td>
-                                                <td>{auction.endCommitTime.toLocaleString()}</td>
-                                                <td>{auction.endPriceTime.toLocaleString()}</td>
-                                                <td>{auction.status.includes("claiming") ? "claiming" : auction.status}</td>
-                                                <td>
-                                                    {renderAction(auction.domain, auction.status)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                {loading ? (  // Show spinner when loading
+                                    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '150px' }}>
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    auctionData.length > 0 ? (
+                                        <table className="table">
+                                            <thead className="theme-bg">
+                                                <tr>
+                                                    {["Domain Name", "Commit Hash", "Confirm Price", "Status", "Actions"].map((item, index) => (
+                                                        <th key={index} scope="col">{item}</th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {auctionData.map((auction, index) => (
+                                                    <tr key={index}>
+                                                        <td className="tb-title">{auction.domain}</td>
+                                                        <td>{auction.endCommitTime.toLocaleString()}</td>
+                                                        <td>{auction.endPriceTime.toLocaleString()}</td>
+                                                        <td>{auction.status.includes("claiming") ? "claiming" : auction.status}</td>
+                                                        <td>{renderAction(auction.domain, auction.status)}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <div>No auctions available</div>
+                                    )
+                                )}
                             </div>
                         </div>
                     </div>

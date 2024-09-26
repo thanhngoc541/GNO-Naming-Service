@@ -70,7 +70,7 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                     const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v402/domain/registrar',
+                        'gno.land/r/varmeta/demo/v403/domain/registrar',
                         'CommitHash',
                         [modifiedDomain, hashedString],
                         1,
@@ -90,7 +90,7 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                     const result = await sendCallContract(
                         account.address,
                         '100ugnot',
-                        'gno.land/r/varmeta/demo/v402/domain/registrar',
+                        'gno.land/r/varmeta/demo/v403/domain/registrar',
                         'CommitPrice',
                         [price, secret, modifiedDomain],
                         1,
