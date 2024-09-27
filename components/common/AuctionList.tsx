@@ -47,6 +47,11 @@ const AuctionList = () => {
             setLoading(false);  // Turn off loading state
         }
     };
+    const extractNumber = (str: string) => {
+        const match = str.match(/\d+/);
+        const number = match ? parseInt(match[0], 10) : 0;
+        return number;
+    }
 
     const handleClaim = async (domain: string) => {
         try {
@@ -55,9 +60,12 @@ const AuctionList = () => {
                 return;
             }
 
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v405/domain/registrar', `GetWinnerPrice("${domain}")`);
+            const fee = extractNumber(resolverResult)
+
             const result = await sendCallContract(
                 account.address,
-                "100ugnot",
+                `${fee}ugnot`,
                 'gno.land/r/varmeta/demo/v405/domain/registrar',
                 'Claim',
                 [domain],
@@ -129,7 +137,7 @@ const AuctionList = () => {
             if (account && account.address === address) {
                 return <button onClick={() => handleClaim(domain)} className="btn btn-2">Claim Domain</button>;
             } else {
-                return <div className="good-luck-message"><p>Good luck next time!</p></div>;
+                return "Good luck next time";
             }
         }
 
@@ -139,9 +147,9 @@ const AuctionList = () => {
         if (addressMatch) {
             const address = addressMatch[1];
             if (account && account.address === address) {
-                return <div className="good-luck-message"><p>Claimed</p></div>;
+                return "Claimed";
             } else {
-                return <div className="good-luck-message"><p>Good luck next time!</p></div>;
+                return "Good luck next time";
             }
         }
 
@@ -209,7 +217,7 @@ const AuctionList = () => {
                                                         <td className="tb-title">{auction.domain}</td>
                                                         <td>{auction.endCommitTime.toLocaleString()}</td>
                                                         <td>{auction.endPriceTime.toLocaleString()}</td>
-                                                        <td>{auction.status.includes("claiming") ? "claiming" : auction.status}</td>
+                                                        <td>{auction.status.includes("owned") ? "claimed" : auction.status.includes("claiming") ? "claiming" : auction.status}</td>
                                                         <td>{renderAction(auction.domain, auction.status)}</td>
                                                     </tr>
                                                 ))}
