@@ -36,7 +36,7 @@ const DomainRegisterBox = ({ style, onRegisterSuccess }: any) => {
 
             try {
                 const resolverResult = await provider.evaluateExpression(
-                    'gno.land/r/varmeta/demo/v406/domain/registrar',
+                    'gno.land/r/varmeta/demo/v5/domain/registrar',
                     `GetCurrentStatus("${gnoUrl}","${account.address}")`
                 );
                 const status = extractStringBetweenQuotes(resolverResult);
