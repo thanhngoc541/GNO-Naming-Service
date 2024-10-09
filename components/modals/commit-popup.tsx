@@ -92,7 +92,7 @@ const CommitPopupModal: React.FC<CommitPopupModalProps> = ({ domain, show, actio
                         '100ugnot',
                         'gno.land/r/varmeta/demo/v5/domain/registrar',
                         'CommitPrice',
-                        [price, secret, modifiedDomain],
+                        [modifiedDomain, price, secret],
                         1,
                         10000000
                     );
