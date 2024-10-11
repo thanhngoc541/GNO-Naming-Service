@@ -29,7 +29,7 @@ const AuctionList = () => {
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v5/domain/registrar', `GetJoinedBid("${account.address}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v6/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
@@ -60,13 +60,13 @@ const AuctionList = () => {
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v5/domain/registrar', `GetWinnerPrice("${domain}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v6/domain/registrar', `GetWinnerPrice("${domain}")`);
             const fee = extractNumber(resolverResult)
 
             const result = await sendCallContract(
                 account.address,
                 `${fee}ugnot`,
-                'gno.land/r/varmeta/demo/v5/domain/registrar',
+                'gno.land/r/varmeta/demo/v6/domain/registrar',
                 'Claim',
                 [domain],
                 1,
