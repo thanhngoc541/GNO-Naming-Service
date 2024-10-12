@@ -129,7 +129,7 @@ const AuctionList = () => {
     }, [account, connect]);
 
     const renderAction = (domain: string, status: string) => {
-        const claimingRegex = /^([a-zA-Z0-9]+) is claiming domain name:/;
+        const claimingRegex = /^([a-zA-Z0-9]+) is Claiming/;
         const claimingMatch = status.match(claimingRegex);
 
         if (claimingMatch) {
