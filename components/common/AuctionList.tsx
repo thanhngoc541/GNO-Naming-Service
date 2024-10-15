@@ -29,7 +29,7 @@ const AuctionList = () => {
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v6/domain/registrar', `GetJoinedBid("${account.address}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v7/domain/registrar', `GetJoinedBid("${account.address}")`);
             const extractedStrings = extractValuesFromString(resolverResult);
             const newAuctionData: Auction[] = [];
             for (let i = 0; i < extractedStrings.length; i += 4) {
@@ -60,13 +60,13 @@ const AuctionList = () => {
                 return;
             }
 
-            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v6/domain/registrar', `GetWinnerPrice("${domain}")`);
+            const resolverResult = await provider.evaluateExpression('gno.land/r/varmeta/demo/v7/domain/registrar', `GetWinnerPrice("${domain}")`);
             const fee = extractNumber(resolverResult)
 
             const result = await sendCallContract(
                 account.address,
                 `${fee}ugnot`,
-                'gno.land/r/varmeta/demo/v6/domain/registrar',
+                'gno.land/r/varmeta/demo/v7/domain/registrar',
                 'Claim',
                 [domain],
                 1,
@@ -129,7 +129,7 @@ const AuctionList = () => {
     }, [account, connect]);
 
     const renderAction = (domain: string, status: string) => {
-        const claimingRegex = /^([a-zA-Z0-9]+) is Claiming/;
+        const claimingRegex = /^([a-zA-Z0-9]+) is claiming/;
         const claimingMatch = status.match(claimingRegex);
 
         if (claimingMatch) {
